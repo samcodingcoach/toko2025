@@ -271,6 +271,9 @@ public partial class Bluetooth : ContentPage, INotifyPropertyChanged
 
     private async void SaveButton_Clicked(object sender, EventArgs e)
     {
+        // Ensure code page 437 encoding is available
+        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+        
         try
         {
             System.Diagnostics.Debug.WriteLine("=== SAVE BUTTON CLICKED ===");
@@ -293,23 +296,13 @@ public partial class Bluetooth : ContentPage, INotifyPropertyChanged
 
             try
             {
-                // Test print
-                string testText = "=== PRINTER TEST ===\n" +
-                                "Toko2025 POS System\n" +
-                                "Printer Connected Successfully\n" +
-                                "Test Time: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "\n" +
-                                "====================\n\n\n";
-                
-                await _bluetoothService.Print(SelectedDevice.Name, testText);
-                
+                // Test print dengan format struk ESC/POS
+                await PrintReceiptAsync(SelectedDevice.Name);
                 // Save as default printer
                 Preferences.Set("default_printer", SelectedDevice.Name);
                 _savedPrinterName = SelectedDevice.Name;
-                
                 System.Diagnostics.Debug.WriteLine($"Printer saved as default: {SelectedDevice.Name}");
-                
                 await ShowToast($"Printer '{SelectedDevice.Name}' saved as default");
-                
                 // Navigate back
                 await Navigation.PopAsync();
             }
@@ -333,6 +326,113 @@ public partial class Bluetooth : ContentPage, INotifyPropertyChanged
             System.Diagnostics.Debug.WriteLine($"SaveButton_Clicked error: {ex.Message}");
             await ShowToast($"Error saving configuration: {ex.Message}");
         }
+    }
+
+    // ESC/POS receipt printing method
+    private async Task PrintReceiptAsync(string printerName)
+    {
+        const int CHAR_PER_LINE = 32; // Sesuaikan dengan printer Anda
+        string garis = new string('-', CHAR_PER_LINE) + "\r\n";
+        var sb = new System.Text.StringBuilder();
+
+        // HEADER
+        sb.Append(
+            "\x1B\x61\x01" +          // Center align
+            "\x1B\x21\x08" +          // Font A Bold
+            "STRUK TEST PRINTER\r\n" +
+            "\x1B\x21\x00" +          // Reset font normal
+            $"No: 12345 | TEST\r\n" +
+            $"2024-06-01. Konsumen\r\n\r\n" +
+            $"No. Antrian: 1\r\n" +
+            garis
+        );
+
+        // MODE PESANAN - Besar dan Center
+        sb.Append(
+            "\x1B\x61\x01" +    // Center
+            "\x1D\x21\x11" +    // Font double width & height
+            $"DINE-IN\r\n" +
+            "\x1D\x21\x00" +    // Reset font
+            "\x1B\x61\x00" +    // Align kiri
+            garis
+        );
+
+        // RINCIAN - Bold normal
+        sb.Append(
+            "\x1B\x21\x08" +
+            "RINCIAN\r\n" +
+            "\x1B\x21\x00"
+        );
+
+        // DETAIL PRODUK (contoh)
+        sb.AppendLine("Produk A");
+        sb.AppendLine(AlignRight("2x 10000", "20000", CHAR_PER_LINE));
+        sb.AppendLine();
+        sb.AppendLine("Produk B");
+        sb.AppendLine(AlignRight("1x 5000", "5000", CHAR_PER_LINE));
+        sb.AppendLine();
+
+        // SUBTOTAL & LAINNYA
+        sb.Append(
+            "\x1B\x21\x08" + "SUBTOTAL\r\n" + "\x1B\x21\x00" +
+            AlignRight("Produk", $"25000", CHAR_PER_LINE) + "\r\n" +
+            AlignRight("Take Away", $"0", CHAR_PER_LINE) + "\r\n" +
+            AlignRight("Service Charge", $"0", CHAR_PER_LINE) + "\r\n" +
+            AlignRight("PPN Resto", $"0", CHAR_PER_LINE) + "\r\n" +
+            AlignRight("DISKON", $"0", CHAR_PER_LINE) + "\r\n" +
+            AlignRight("Promo", $"0", CHAR_PER_LINE) + "\r\n\r\n" +
+            garis
+        );
+
+        // TOTAL HARGA - besar dan center
+        sb.Append(
+            "\x1B\x21\x08" + "TOTAL HARGA\r\n" +
+            "\x1B\x61\x01" +
+            "\x1D\x21\x11" +
+            $"25000\r\n" +
+            "\x1D\x21\x00" +
+            "\x1B\x61\x00" +
+            garis
+        );
+
+        // CASH & KEMBALIAN
+        sb.Append(
+            AlignRight("Cash", $"30000", CHAR_PER_LINE) + "\r\n" +
+            AlignRight("Kembalian", $"5000", CHAR_PER_LINE) + "\r\n" +
+            $"Kasir: Admin\r\n\r\n"
+        );
+
+        // FOOTER - Centered thanks message
+        sb.Append(
+            "\x1B\x61\x01" +
+            "\x1B\x21\x08" + "Terimakasih Atas\r\nPembayaran Anda\r\n" +
+            "\x1B\x21\x00" +
+            DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") +
+            "\r\n"
+        );
+
+        // FEED & CUT
+        sb.Append("\x1B\x64\x02");     // Feed 2 lines
+        sb.Append("\x1D\x56\x42\x00"); // Partial cut
+
+        // Buka laci (jika perlu)
+        sb.Append("\x1B\x70\x00\x19\xFA");
+
+        string struk = sb.ToString();
+        byte[] buffer = System.Text.Encoding.GetEncoding(437).GetBytes(struk);
+
+        // Kirim ke printer
+        string struk437 = System.Text.Encoding.GetEncoding(437).GetString(buffer);
+        await _bluetoothService.Print(printerName, struk437);
+    }
+
+    // Helper untuk align kanan
+    private string AlignRight(string label, string value, int? totalLength = null)
+    {
+        int len = totalLength ?? 32;
+        int spacing = len - (label.Length + value.Length);
+        spacing = spacing < 0 ? 0 : spacing;
+        return label + new string(' ', spacing) + value;
     }
 
     private async Task ShowToast(string message)
