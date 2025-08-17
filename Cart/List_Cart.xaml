@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Toko2025.Cart.List_Cart"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="#f6f6f6">
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <!-- Simple Inverted Bool Converter inline -->
+            <x:Boolean x:Key="False">False</x:Boolean>
+            <x:Boolean x:Key="True">True</x:Boolean>
+            
+            <!-- Bool to Opacity Converter -->
+            <x:Double x:Key="EnabledOpacity">1.0</x:Double>
+            <x:Double x:Key="DisabledOpacity">0.3</x:Double>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Header -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto"
+              BackgroundColor="White"
+              Padding="20,20,20,10">
+            <Label Grid.Column="0"
+                   FontSize="20"
+                   FontFamily="FontBold"
+                   TextColor="#333333">
+                <Label.Text>
+                    <Binding Path="CartSummary.CartTitle" 
+                             FallbackValue="Shopping Cart"
+                             TargetNullValue="Shopping Cart" />
+                </Label.Text>
+            </Label>
+
+            <Image Source="cart_delete.png" Grid.Column="1" HeightRequest="28"
+                   IsVisible="{Binding HasItems}"
+                   IsEnabled="{Binding CanDeleteCart}">
+                <Image.Triggers>
+                    <DataTrigger TargetType="Image" Binding="{Binding CanDeleteCart}" Value="False">
+                        <Setter Property="Opacity" Value="0.3" />
+                    </DataTrigger>
+                    <DataTrigger TargetType="Image" Binding="{Binding CanDeleteCart}" Value="True">
+                        <Setter Property="Opacity" Value="1.0" />
+                    </DataTrigger>
+                </Image.Triggers>
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer x:Name="TapDel_Penjualan" Tapped="TapDel_Penjualan_Tapped"></TapGestureRecognizer>
+                </Image.GestureRecognizers>
+            </Image>
+        </Grid>
+
+        <!-- Content Area -->
+        <Grid Grid.Row="1">
+            <!-- Loading Indicator -->
+            <ActivityIndicator IsVisible="{Binding IsLoading}"
+                              IsRunning="{Binding IsLoading}"
+                              Color="#4A90E2"
+                              VerticalOptions="Center"
+                              HorizontalOptions="Center" />
+
+            <!-- Empty Cart Message - Minimalist & Modern -->
+            <StackLayout IsVisible="{Binding IsEmpty}"
+                         VerticalOptions="Center"
+                         HorizontalOptions="Center"
+                         Spacing="24"
+                         Padding="60,40">
+                
+                <!-- Shopping bag icon -->
+                <Border BackgroundColor="#F8F9FA"
+                        StrokeThickness="0"
+                        HeightRequest="80"
+                        WidthRequest="80"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="40" />
+                    </Border.StrokeShape>
+                    <Label Text="🛍️"
+                           FontSize="36"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center" />
+                </Border>
+
+                <!-- Empty message -->
+                <StackLayout Spacing="8" HorizontalOptions="Center">
+                    <Label Text="Your cart is empty"
+                           FontSize="20"
+                           FontFamily="FontBold"
+                           HorizontalTextAlignment="Center"
+                           TextColor="#1F2937" />
+                    
+                    <Label Text="Add some products to get started"
+                           FontSize="14"
+                           HorizontalTextAlignment="Center"
+                           TextColor="#6B7280"
+                           LineHeight="1.4" />
+                </StackLayout>
+            </StackLayout>
+
+            <!-- Cart Items -->
+            <ScrollView IsVisible="{Binding HasItems}"
+                        BackgroundColor="White"
+                        Margin="0,10,0,0">
+                <StackLayout Padding="20,10,20,10"
+                             Spacing="0">
+
+                    <Label Text="← Swipe to delete"
+                        FontSize="Caption" FontFamily="FontRegular"
+                        
+                        HorizontalTextAlignment="End"
+                        Opacity="0.7" />
+
+                    <!-- Cart Items List -->
+                    <CollectionView ItemsSource="{Binding CartItems}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <!-- SwipeView untuk setiap cart item -->
+                                <SwipeView>
+                                    <!-- Right Swipe Actions - Delete Only -->
+                                    <SwipeView.RightItems>
+                                        <SwipeItems Mode="Reveal">
+                                            <SwipeItem Text="Delete" 
+                                                       BackgroundColor="Red"
+                                                       IconImageSource="delete.png"
+                                                       Invoked="OnDeleteItemSwipe" />
+                                        </SwipeItems>
+                                    </SwipeView.RightItems>
+                                    
+                                    <!-- Main Content -->
+                                    <Border BackgroundColor="White" 
+                                            Stroke="LightGray" 
+                                            StrokeThickness="0"
+                                            Margin="0,0,0,2">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="8" />
+                                        </Border.StrokeShape>
+                                        
+                                        <Grid ColumnDefinitions="80,*,Auto" 
+                                              ColumnSpacing="15" 
+                                              Padding="15,15,15,15">
+                                            
+                                            <!-- Product Image -->
+                                            <Border Grid.Column="0"
+                                                    BackgroundColor="Transparent"
+                                                    HeightRequest="80" 
+                                                    Stroke="WhiteSmoke"
+                                                    WidthRequest="80">
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="8" />
+                                                </Border.StrokeShape>
+                                                <Image Source="{Binding ImageUrl, FallbackValue='default_product.png', TargetNullValue='default_product.png'}"
+                                                       Aspect="AspectFill" />
+                                            </Border>
+                                            
+                                            <!-- Product Details -->
+                                            <StackLayout Grid.Column="1"
+                                                         Spacing="5"
+                                                         VerticalOptions="Center">
+                                                <Label Text="{Binding nama_barang}"
+                                                       LineBreakMode="TailTruncation"
+                                                       FontFamily="FontRegular"
+                                                       FontAttributes="Bold"
+                                                       TextColor="#333333" />
+                                                <Label Text="{Binding nama_merk, FallbackValue='Unknown Brand', TargetNullValue='Unknown Brand'}"
+                                                       FontSize="Caption"
+                                                       TextColor="#666666" />
+                                                       
+                                                <!-- Price and Quantity -->
+                                                <StackLayout Orientation="Horizontal"
+                                                             Spacing="10">
+                                                    <Label Text="{Binding FormattedPrice}"
+                                                           FontSize="14"
+                                                           FontAttributes="Bold"
+                                                           TextColor="#333333" />
+                                                    <!-- Quantity Display -->
+                                                    <Label Text="{Binding QuantityInt, StringFormat='x{0}'}"
+                                                           FontSize="14"
+                                                           FontAttributes="Bold"
+                                                           HorizontalTextAlignment="Center"
+                                                           TextColor="#FA5252" />
+                                                </StackLayout>
+                                                
+                                                <!-- Swipe Hint -->
+                                              
+                                            </StackLayout>
+                                            
+                                            <!-- Subtotal -->
+                                            <StackLayout Grid.Column="2"
+                                                         VerticalOptions="Center">
+                                                <Label Text="{Binding FormattedSubtotal}"
+                                                       FontSize="Subtitle"
+                                                       FontAttributes="Bold"
+                                                       TextColor="#4A90E2" />
+                                            </StackLayout>
+                                        </Grid>
+                                    </Border>
+                                </SwipeView>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <!-- Discount Code Section -->
+                    <Border Stroke="#E0E0E0"
+                            StrokeThickness="1" x:Name="BorderDiscount"
+                            BackgroundColor="#F9F9F9"
+                            Padding="15"
+                            Margin="0,20,0,0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8" />
+                        </Border.StrokeShape>
+                        <StackLayout Spacing="10">
+                            <Label Text="Apply Discount Member"
+                                   FontSize="14"
+                                  FontFamily="FontBold"
+                                   TextColor="#333333" />
+                            <Grid ColumnDefinitions="*,Auto"
+                                  ColumnSpacing="10">
+                                <Entry Grid.Column="0"
+                                       Placeholder="Enter Member Phone"
+                                       PlaceholderColor="#999999" x:Name="T_NoHp"
+                                       BackgroundColor="White" Keyboard="Telephone"
+                                        />
+                                <Button Grid.Column="1"
+                                        Text="Apply"
+                                        BackgroundColor="SeaGreen"
+                                        TextColor="White"
+                                        x:Name="B_ApplyDiscountMember" Clicked="B_ApplyDiscountMember_Clicked"
+                                        CornerRadius="8"
+                                        FontSize="14" />
+                            </Grid>
+                        </StackLayout>
+                    </Border>
+                </StackLayout>
+            </ScrollView>
+        </Grid>
+
+      
+        <StackLayout Grid.Row="2" 
+                     BackgroundColor="White" 
+                     Padding="20" 
+                     Margin="0,10,0,10" 
+                     IsVisible="{Binding HasItems}">
+
+            <!-- Order Summary -->
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto" 
+                  ColumnDefinitions="*,Auto" 
+                  RowSpacing="5" 
+                  Margin="0,0,0,20">
+                <Label Grid.Row="0" Grid.Column="0" 
+                       Text="Subtotal" 
+                       FontSize="14" 
+                       TextColor="#666666" />
+                <Label Grid.Row="0" Grid.Column="1" 
+                       Text="{Binding CartSummary.FormattedTotalAmount}" 
+                       FontSize="14" 
+                       HorizontalTextAlignment="End" 
+                       TextColor="#333333" />
+                <Label Grid.Row="2" Grid.Column="0" 
+                       Text="Discount" 
+                       FontSize="14" 
+                       TextColor="SeaGreen" />
+                <Label Grid.Row="2" Grid.Column="1" 
+                       Text="{Binding CartSummary.FormattedTotalDiskon}" 
+                       FontSize="14" 
+                       HorizontalTextAlignment="End" 
+                       TextColor="SeaGreen" />
+                <Label Grid.Row="3" Grid.Column="0" 
+                       Margin="0,10,0,0" 
+                       Text="Total" 
+                       FontSize="14" 
+                       FontFamily="FontBold" 
+                       TextColor="#333333" />
+                <Label Grid.Row="3" Grid.Column="1" 
+                       Margin="0,10,0,0" 
+                       Text="{Binding CartSummary.FormattedFinalTotal}" 
+                       HorizontalTextAlignment="End" 
+                       FontSize="14" 
+                       FontFamily="FontBold" 
+                       TextColor="#333333" />
+            </Grid>
+            <!-- Bottom Actions -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                <Button Grid.Column="0" 
+                        Text="Debt" 
+                        BackgroundColor="#F0F0F0" 
+                        TextColor="#333333" 
+                        FontFamily="FontBold"
+                        FontSize="Subtitle"
+                        CornerRadius="8"
+                        x:Name="B_Debt" 
+                        Clicked="B_Debt_Clicked"
+                        IsEnabled="{Binding IsDebtEnabled}"
+                        ImageSource="debt.png" />
+                <Button Grid.Column="1" 
+                        Text="Checkout" 
+                        x:Name="B_Checkout" 
+                        Clicked="B_Checkout_Clicked" 
+                        BackgroundColor="#4A90E2" 
+                        TextColor="White" ImageSource="checkout.png"
+                        FontFamily="FontBold"
+                        FontSize="Subtitle"
+                        CornerRadius="8" />
+            </Grid>
+        </StackLayout>
+    </Grid>
+</ContentPage>

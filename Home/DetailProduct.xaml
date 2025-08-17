@@ -1,0 +1,312 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:services="clr-namespace:Toko2025.Services"
+             x:Class="Toko2025.Home.DetailProduct"
+             
+             BackgroundColor="#f6f6f6">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <services:CountToBoolConverter x:Key="CountToBoolConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*" Padding="0" RowSpacing="0" Margin="0,0,0,2" >
+
+        <!-- Product Title - Fixed Header -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="0" Padding="20,10" BackgroundColor="White">
+
+            <Image Source="back_black.png" Grid.Column="0" VerticalOptions="Center" HeightRequest="36" 
+                   TranslationY="3" TranslationX="-10">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer x:Name="TapBack" Tapped="TapBack_Tapped"></TapGestureRecognizer>
+                </Image.GestureRecognizers>
+                
+            </Image>
+
+            <StackLayout Grid.Column="1">
+                <Label x:Name="L_ProductTitle" Text="Loading..." FontSize="20" FontFamily="FontBold" TextColor="#333333" />
+
+                <HorizontalStackLayout Spacing="10">
+                    <Label x:Name="L_Brand" Text="Brand : Loading..." TextColor="Gray" FontFamily="FontRegular" FontSize="Caption" />
+
+                    <Label x:Name="L_Categories" Text="Categories : Loading..." 
+                           LineBreakMode="TailTruncation" MaxLines="1" WidthRequest="150" TextColor="Gray" FontFamily="FontRegular" FontSize="Caption" />
+                </HorizontalStackLayout>
+            </StackLayout>
+
+            <Border Grid.Column="2" 
+                    Stroke="LightGray" 
+                    StrokeThickness="0.1" 
+                  
+                    Padding="7,5"
+                    VerticalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8"/>
+                </Border.StrokeShape>
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="White" Offset="0.0" />
+                        <GradientStop Color="LightGrey" Offset="0.5" />
+                        <GradientStop Color="White" Offset="1.0" />
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Border.Shadow>
+                    <Shadow Brush="LightGray" 
+                            Offset="2,2" 
+                            Radius="4" 
+                            Opacity="0.3"/>
+                </Border.Shadow>
+                <Image Source="add_cart1.png" HeightRequest="32" TranslationX="1">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer x:Name="TapAddTocart" Tapped="TapAddTocart_Tapped"></TapGestureRecognizer>
+                    </Image.GestureRecognizers>
+                </Image>
+                
+            </Border>
+
+
+        </Grid>
+
+        <!-- Scrollable Content Area - Grid Row 1, 2, 3 -->
+        <ScrollView Grid.Row="1" 
+                    Orientation="Vertical"
+                    VerticalScrollBarVisibility="Default">
+            <StackLayout Spacing="0">
+                
+                <!-- Product Images Container dengan FlexLayout - Sebelumnya Grid Row="1" -->
+                <ScrollView Orientation="Horizontal" 
+                            HeightRequest="220" 
+                            Margin="20,10,0,0"
+                            HorizontalScrollBarVisibility="Never">
+                    <FlexLayout x:Name="FL_ProductImages"
+                                Direction="Row"
+                                Wrap="NoWrap"
+                                JustifyContent="Start"
+                                AlignItems="Center">
+                        
+                        <!-- Image 1 Container -->
+                        <Grid WidthRequest="220" 
+                              HeightRequest="220" 
+                              Margin="0,0,10,0">
+                            <Frame BackgroundColor="Transparent" 
+                                   BorderColor="Transparent" 
+                                   CornerRadius="8" 
+                                   HasShadow="False" 
+                                   Padding="5">
+                                <Image x:Name="I_ProductImage1" 
+                                       Source="p300x300.svg"
+                                       Aspect="AspectFit" 
+                                       HorizontalOptions="Center" 
+                                       VerticalOptions="Center"
+                                       BackgroundColor="Transparent"/>
+                            </Frame>
+                            
+                            <!-- Loading indicator overlay -->
+                            <ActivityIndicator x:Name="AI_Image1Loading"
+                                             IsVisible="True"
+                                             IsRunning="True"
+                                             Color="#4A90E2"
+                                             HorizontalOptions="Center"
+                                             VerticalOptions="Center" />
+                        </Grid>
+                        
+                        <!-- Image 2 Container -->
+                        <Grid WidthRequest="220" 
+                              HeightRequest="220" 
+                              Margin="0,0,10,0">
+                            <Frame BackgroundColor="Transparent" 
+                                   BorderColor="Transparent" 
+                                   CornerRadius="8" 
+                                   HasShadow="False" 
+                                   Padding="5">
+                                <Image x:Name="I_ProductImage2" 
+                                       Source="p300x300.svg"
+                                       Aspect="AspectFit" 
+                                       HorizontalOptions="Center" 
+                                       VerticalOptions="Center"
+                                       BackgroundColor="Transparent"/>
+                            </Frame>
+                            
+                            <!-- Loading indicator overlay -->
+                            <ActivityIndicator x:Name="AI_Image2Loading"
+                                             IsVisible="True" 
+                                             IsRunning="True"
+                                             Color="#4A90E2"
+                                             HorizontalOptions="Center"
+                                             VerticalOptions="Center" />
+                        </Grid>
+                        
+                    </FlexLayout>
+                </ScrollView>
+
+                <!-- Product Details Section - Sebelumnya Grid Row="2" -->
+                <StackLayout Margin="0,15,0,0" Padding="20,0,20,10">
+                    <!-- Barcode Information -->
+                    <Grid  ColumnDefinitions="*,*" >
+
+                        <!-- Barcode #1 -->
+                        <StackLayout Grid.Column="0">
+                            <Label Text="Barcode #1" TextColor="Gray"/>
+                            <Label x:Name="L_Barcode1" Text="Loading..." FontSize="Caption" TextColor="Blue" />
+                        </StackLayout>
+
+                        <!-- Barcode #2 -->
+                        <StackLayout Grid.Column="1">
+                            <Label Text="Barcode #2" TextColor="Gray"/>
+                            <Label x:Name="L_Barcode2" Text="Loading..." FontSize="Caption" TextColor="Blue" />
+                        </StackLayout>
+                    </Grid>
+
+                    
+                    <Grid  ColumnDefinitions="*,Auto" Margin="0,10,0,0">
+
+                        <!-- Price Labels -->
+                        <StackLayout Grid.Column="0" Spacing="5">
+                            <Label Text="Regular Price" TextColor="Gray"/>
+                            <Label Text="Membership Price" TextColor="Gray"/>
+                            <Label Text="Remaining Stock" TextColor="Gray"/>
+                            <Label Text="Unit" TextColor="Gray"/>
+                        </StackLayout>
+
+                        <!-- Price Values -->
+                        <StackLayout Grid.Column="1" HorizontalOptions="End" Spacing="5">
+                            <Label x:Name="L_RegularPrice" Text="Loading..." FontFamily="FontBold" TextColor="#333333" HorizontalOptions="End"/>
+                            <Label x:Name="L_MembershipPrice" Text="Loading..." FontFamily="FontBold" TextColor="#333333" HorizontalOptions="End"/>
+                            <Label x:Name="L_RemainingStock" Text="0" FontFamily="FontBold" HorizontalOptions="End">
+                                <Label.Triggers>
+                                    <!-- Trigger untuk warna berdasarkan stock -->
+                                    <DataTrigger TargetType="Label" Binding="{Binding Text, Source={x:Reference L_RemainingStock}}" Value="0">
+                                        <Setter Property="TextColor" Value="Red" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Label x:Name="L_Unit" Text="Pieces" FontFamily="FontBold" TextColor="#333333" HorizontalOptions="End"/>
+                        </StackLayout>
+                    </Grid>
+
+                    <Grid  ColumnDefinitions="*,Auto" Margin="0,15,0,0">
+
+                        <StackLayout Grid.Column="0" Spacing="10">
+                            <Label Text="Amount" TextColor="#333333" VerticalOptions="Center" FontFamily="FontBold"/>
+                            <Frame BackgroundColor="White" BorderColor="LightGray" 
+                                   WidthRequest="60" HorizontalOptions="Start" CornerRadius="5" Padding="10,0" HasShadow="False">
+                                <Entry x:Name="E_Amount" 
+                                       Text="1" 
+                                       FontFamily="FontBold" 
+                                       Keyboard="Numeric" 
+                                       
+                                       VerticalOptions="Center"
+                                       MaxLength="3"
+                                       Placeholder="1" />
+                            </Frame>
+
+                        </StackLayout>
+
+                        <StackLayout Grid.Column="1" Spacing="10">
+                            <Label Text="Subtotal" TextColor="#333333" VerticalOptions="Center" FontFamily="FontBold"/>
+                            <Frame BackgroundColor="#F8F8F8" BorderColor="LightGray" CornerRadius="5" Padding="0,0,10,0" HasShadow="False">
+                                <Entry x:Name="E_Subtotal" 
+                                       FontFamily="FontBold" 
+                                       Text="0" 
+                                       HorizontalTextAlignment="End" 
+                                       VerticalOptions="Center" 
+                                       IsReadOnly="True"
+                                       TextColor="#4A90E2"
+                                       BackgroundColor="Transparent" />
+                            </Frame>
+                            <Label x:Name="L_SaveMember" 
+                                   HorizontalTextAlignment="End" 
+                                   FontSize="Caption"
+                                   IsVisible="False"
+                                   Margin="0,5,0,0"/>
+                        </StackLayout>
+                    </Grid>
+
+                </StackLayout>
+
+                <!-- Similar Products Section - Sebelumnya Grid Row="3" -->
+                <Grid BackgroundColor="White" Padding="20,10,20,10"  IsVisible="{Binding SimilarProducts.Count, 
+                    Converter={StaticResource CountToBoolConverter}}">
+                    <StackLayout Spacing="10">
+
+                        <Label Text="Similiar Product" FontFamily="FontBold" TextColor="#333333" ></Label>
+                        <CollectionView ItemsSource="{Binding SimilarProducts}" SelectionMode="None">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10"/>
+                            </CollectionView.ItemsLayout>
+
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Padding="0">
+                                        <StackLayout Margin="0">
+                                            <Border BackgroundColor="#F2F2F2" StrokeThickness="0.3"  HeightRequest="120">
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="8"/>
+                                                </Border.StrokeShape>
+                                                <Grid>
+                                                    <Image Source="{Binding ImageUrl}" Aspect="AspectFill" BackgroundColor="#F2F2F2">
+                                                        <Image.GestureRecognizers>
+                                                            <TapGestureRecognizer Tapped="OnSimilarProductTapped" />
+                                                        </Image.GestureRecognizers>
+                                                    </Image>
+                                                
+                                                    <!-- Loading Overlay for Similar Product -->
+                                                    <Grid x:Name="SimilarProductLoadingOverlay" 
+                                                          BackgroundColor="#80000000" 
+                                                          IsVisible="False">
+                                                        <ActivityIndicator Color="White" 
+                                                                         IsRunning="True" 
+                                                                         VerticalOptions="Center" 
+                                                                         HorizontalOptions="Center"/>
+                                                        <Label Text="Loading..." 
+                                                               TextColor="White" 
+                                                               FontSize="12" 
+                                                               HorizontalOptions="Center" 
+                                                               VerticalOptions="Center" 
+                                                               Margin="0,30,0,0"/>
+                                                    </Grid>
+                                                </Grid>
+                                            </Border>
+                                            <Label Text="{Binding nama_barang}" Margin="1,4,0,0" LineBreakMode="TailTruncation" 
+                                                   FontFamily="FontRegular" 
+                                                   FontSize="12" />
+
+                                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="5" Margin="1,0">
+                                                <Label Text="{Binding FormattedPrice}" FontSize="Caption" Grid.Column="0" TextColor="#4A90E2" FontFamily="FontBold" VerticalOptions="Center"/>
+                                                <Image Source="stok.png" Opacity="0.6"  Grid.Column="1" HeightRequest="14" VerticalOptions="Center"/>
+                                                <Label Text="{Binding FormattedStock}"   Grid.Column="2" FontSize="Caption" />
+                                            </Grid>
+                                        </StackLayout>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                    </StackLayout>
+                    
+                </Grid>
+                
+            </StackLayout>
+        </ScrollView>
+        
+        <!-- Loading Overlay for Similar Product Navigation -->
+        <Grid x:Name="GlobalLoadingOverlay" 
+              Grid.RowSpan="2"
+              BackgroundColor="#80000000" 
+              IsVisible="False">
+            <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10">
+                <ActivityIndicator Color="White" 
+                                 IsRunning="True" 
+                                 HeightRequest="50"
+                                 WidthRequest="50"/>
+                <Label Text="Loading Product..." 
+                       TextColor="White" 
+                       FontSize="16" 
+                       FontFamily="FontBold"
+                       HorizontalOptions="Center"/>
+            </StackLayout>
+        </Grid>
+
+    </Grid>
+</ContentPage>

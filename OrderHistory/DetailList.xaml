@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Toko2025.OrderHistory.DetailList" NavigationPage.HasNavigationBar="False"
+             >
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <Grid Padding="10,15" Grid.Row="0" ColumnDefinitions="Auto,*" BackgroundColor="#4A90E2">
+            <!-- Back button -->
+            <Image Source="back_white.png" HeightRequest="28" 
+                   VerticalOptions="Center" Grid.Column="0" Margin="0,0,15,0">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer x:Name="BackTap" Tapped="BackTap_Tapped"/>
+                </Image.GestureRecognizers>
+            </Image>
+            
+            <!-- Header label -->
+            <Label Text="Item Order History: Loading..." x:Name="L_Faktur" TranslationY="-2" FontSize="20" FontFamily="FontBold" 
+                   TextColor="White" 
+                   Grid.Column="1" VerticalOptions="Center"/>
+        </Grid>
+
+        <!-- Content Section -->
+        <Grid Grid.Row="1">
+            <!-- Loading indicator -->
+            <ActivityIndicator IsVisible="{Binding IsLoading}" IsRunning="{Binding IsLoading}" 
+                              Color="#4A90E2" Margin="20" 
+                              VerticalOptions="Center" HorizontalOptions="Center"/>
+
+            <!-- Items ListView -->
+            <ListView x:Name="ItemsListView"
+                      ItemsSource="{Binding CartItems}" 
+                      
+                      SeparatorVisibility="None"
+                      HasUnevenRows="True"
+                      IsVisible="False">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid ColumnDefinitions="*,Auto" 
+                                  Padding="20,10" VerticalOptions="Start"
+                                  BackgroundColor="{Binding RowBackgroundColor}">
+                                <StackLayout Grid.Column="0">
+                                    <!--json item -> nama_barang-->
+                                    <Label Text="{Binding nama_barang}"  HorizontalTextAlignment="Start" 
+                                           HorizontalOptions="Start" LineBreakMode="TailTruncation" WidthRequest="250" FontFamily="FontBold" TextColor="#333333" FontSize="Subtitle"/>
+                                    <StackLayout Orientation="Horizontal" Spacing="10">
+                                        <!--json: item -> harga_jual X jumlah_jual-->
+                                        <Label Text="{Binding PriceQuantityDisplay}" FontFamily="FontRegular"/>
+                                    </StackLayout>
+                                    <!--json: item -> diskon (only show if discount > 0)-->
+                                    <Label Text="{Binding DiskonDisplay}" Margin="0,10,0,0" TextColor="SeaGreen" 
+                                           FontFamily="FontRegular"/>
+                                </StackLayout>
+                                <StackLayout Grid.Column="1" VerticalOptions="Center">
+                                    <!--json: item-> subtotal-->
+                                    <Label Text="{Binding FormattedSubtotal}" FontFamily="FontBold" FontSize="16" TextColor="#4A90E2"/>
+                                </StackLayout>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <!-- Empty state (when no items) -->
+            <StackLayout x:Name="EmptyStateLayout" 
+                         VerticalOptions="Center" HorizontalOptions="Center" 
+                         Spacing="10" Margin="20" 
+                         IsVisible="False">
+                <Label Text="No items found" 
+                       FontSize="16" 
+                       TextColor="#666666" 
+                       HorizontalOptions="Center"/>
+                <Label Text="This transaction has no items to display" 
+                       FontSize="14" 
+                       TextColor="#999999" 
+                       HorizontalOptions="Center"/>
+            </StackLayout>
+        </Grid>
+
+        <!-- Summary Section -->
+        <Border StrokeThickness="0.6" Grid.Row="2" Stroke="#e0e0e0" 
+                BackgroundColor="#f1f1f1" Padding="15" Margin="10,10,10,15">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="8"/>
+            </Border.StrokeShape>
+            <StackLayout Padding="0">
+                <!-- Status Hutang - Hanya tampil jika hutang = 1 -->
+                <Label x:Name="L_StatusHutang" 
+                       Text="STATUS: HUTANG" 
+                       FontFamily="FontBold" 
+                       FontSize="16" 
+                       TextColor="Red" 
+                       HorizontalOptions="Center" 
+                       Margin="0,0,0,10"
+                       IsVisible="False"/>
+                
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="Total Item" FontFamily="FontRegular" FontSize="16"/>
+                    <!--json: summary->total_qty-->
+                    <Label Text="{Binding CartSummary.FormattedTotalQty}" Grid.Column="1" TextColor="#333333" FontFamily="FontBold" FontSize="16"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="Total Discount" FontFamily="FontRegular" FontSize="16"/>
+                    <!--json: summary->total_diskon-->
+                    <Label Text="{Binding CartSummary.FormattedTotalDiskon}" Grid.Column="1" TextColor="#333333" FontFamily="FontBold" FontSize="16"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,Auto" Margin="0,10">
+                    <Label Text="Total Payment" FontFamily="FontRegular" FontSize="16"/>
+                    <!--json: summary->total_amount-->
+                    <Label Text="{Binding CartSummary.FormattedTotalAmount}" Grid.Column="1" TextColor="#4A90E2" FontFamily="FontBold" FontSize="16"/>
+                </Grid>
+
+                <!-- Pay Debt Button - Hanya tampil jika hutang = 1 -->
+                <Button x:Name="B_PayDebt"
+                        Text="Pay Debt" 
+                        FontFamily="FontBold" 
+                        BackgroundColor="#FF3B30" 
+                        FontSize="Subtitle"
+                        IsVisible="False"
+                        Margin="0,10,0,0"
+                        Clicked="B_PayDebt_Clicked">
+                    <Button.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="#FF3B30" Offset="0.0" />
+                            <GradientStop Color="#FF1744" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Button.Background>
+                </Button>
+            </StackLayout>
+        </Border>
+    </Grid>
+</ContentPage>

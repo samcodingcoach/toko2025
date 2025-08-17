@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sys="clr-namespace:System;assembly=netstandard"
+             x:Class="Toko2025.OrderHistory.List_History" BackgroundColor="#f6f6f6"
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto">
+        <!--header-->
+        <Grid Padding="0,10,10,10" Grid.Row="0" ColumnDefinitions="*,Auto" BackgroundColor="White">
+            <Label Text="Order History" TranslationX="5" FontSize="20" FontFamily="FontBold" TextColor="#333333" Grid.Column="0" 
+                   HorizontalOptions="Center" VerticalOptions="Center"/>
+
+            <Border Stroke="Transparent" HorizontalOptions="EndAndExpand" StrokeThickness="0" 
+                    BackgroundColor="#F5F5F5" Padding="10,5" >
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="5"/>
+                </Border.StrokeShape>
+
+                <HorizontalStackLayout Spacing="0">
+                    <Image Source="download.png" HeightRequest="24" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+            </Border>
+
+        </Grid>
+        
+        <!--filter-->
+        <StackLayout Spacing="15" Orientation="Horizontal" Grid.Row="1" BackgroundColor="White" Padding="20,15" Margin="0,10">
+
+            <Border Stroke="Transparent" StrokeThickness="0" BackgroundColor="#F5F5F5" Padding="15,5,15,5" >
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8"/>
+                </Border.StrokeShape>
+
+                <HorizontalStackLayout Spacing="5">
+                    <DatePicker Format="dd MMMM yyyy" x:Name="DatePicker1" TextColor="#333333" 
+                                BackgroundColor="Transparent"
+                                MaximumDate="{x:Static sys:DateTime.Now}" 
+                                DateSelected="DatePicker1_DateSelected"
+                                MinimumHeightRequest="30"
+                                VerticalOptions="Center"/>
+                    <Image Source="forward.png" HeightRequest="20" Rotation="90" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+            </Border>
+
+            <Border Stroke="Transparent" StrokeThickness="0" BackgroundColor="#F5F5F5" Padding="10,5,10,5" >
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8"/>
+                </Border.StrokeShape>
+
+                <HorizontalStackLayout Spacing="5">
+                    <Picker x:Name="SortJenisPembayaran" 
+                            Title="Payment Method" 
+                            TitleColor="#666666" 
+                            TextColor="#333333" 
+                            BackgroundColor="Transparent"
+                            SelectedIndexChanged="SortJenisPembayaran_SelectedIndexChanged"
+                            MinimumHeightRequest="30"
+                            VerticalOptions="Center">
+                    </Picker>
+                    <Image Source="forward.png" HeightRequest="20" Rotation="90" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+            </Border>
+
+            
+        </StackLayout>
+
+        <ScrollView Grid.Row="2" BackgroundColor="White" VerticalOptions="Start">
+            <StackLayout>
+                <StackLayout Orientation="Horizontal" Spacing="10" VerticalOptions="Center" Padding="20,10">
+                    <Image Source="uangawal.png" HeightRequest="24"></Image>
+                    <Label Text="Opening Balance" FontFamily="FontBold"  TextColor="#333333"/>
+                    <!--uang awal, di load from binding - bound to the first transaction's opening balance-->
+                    <Label Text="{Binding OpeningBalance}" FontSize="16" x:Name="L_UangAwal" FontFamily="FontBold" TextColor="SeaGreen" HorizontalOptions="EndAndExpand"/>
+                </StackLayout>
+
+                <BoxView HeightRequest="10" BackgroundColor="#f6f6f6"></BoxView>
+
+                <!-- Loading indicator -->
+                <ActivityIndicator x:Name="LoadingIndicator" IsVisible="{Binding IsLoading}" IsRunning="{Binding IsLoading}" Color="#4A90E2" Margin="20"/>
+
+                <!-- History ListView -->
+                <ListView x:Name="HistoryListView" 
+                          ItemsSource="{Binding HistoryItems}"
+                          HasUnevenRows="True"
+                          SeparatorVisibility="None" SelectionMode="None"
+                          BackgroundColor="White">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10" Padding="20,10">
+
+                                    <Border Grid.Column="0" StrokeThickness="0" BackgroundColor="#F5F5F5" WidthRequest="45" HeightRequest="45">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="8"/>
+                                        </Border.StrokeShape>
+                                        
+                                        <Image Source="{Binding PaymentIcon}" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Border>
+
+                                    <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+
+                                        <Label Text="{Binding MemberInfo}" FontFamily="FontBold" TextColor="#333333" />
+                                        <Label Text="{Binding TransactionTime}" TextColor="#666666" FontSize="Caption" FontFamily="FontRegular" />
+                                    </StackLayout>
+
+                                    <StackLayout Grid.Column="2" Spacing="2" VerticalOptions="Center">
+                                        <Label Text="{Binding FormattedGrandTotal}" 
+                                               FontFamily="FontBold" 
+                                               FontSize="Subtitle" 
+                                               TextColor="{Binding GrandTotalColor}"/>
+                                    </StackLayout>
+
+                                    <Image Source="more_black.png" Grid.Column="3" Rotation="90" HeightRequest="22" HorizontalOptions="EndAndExpand" 
+                                           TranslationX="5">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer x:Name="TapDetail" Tapped="TapDetail_Tapped"></TapGestureRecognizer>
+                                        </Image.GestureRecognizers>
+                                    </Image>
+
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <!-- Empty state message -->
+                <StackLayout x:Name="EmptyStateLayout" IsVisible="False" Padding="20" Spacing="10">
+                    <Label Text="No history data found" HorizontalOptions="Center" TextColor="#666666" FontSize="16"/>
+                    <Label Text="Select different date to view history" HorizontalOptions="Center" TextColor="#999999" FontSize="14"/>
+                </StackLayout>
+
+            </StackLayout>
+        </ScrollView>
+
+        <!-- Total Sales with Gradient Border -->
+        <Border Grid.Row="4" 
+                Margin="20,10,20,20" 
+                HeightRequest="80"
+                StrokeThickness="0.1">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="12"/>
+            </Border.StrokeShape>
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="White" Offset="0.0"/>
+                    <GradientStop Color="WhiteSmoke" Offset="0.7"/>
+                    <GradientStop Color="LightGray" Offset="1.0"/>
+                </LinearGradientBrush>
+            </Border.Background>
+
+            <Grid ColumnDefinitions="Auto,*" 
+                  Padding="20,0">
+
+                <Image Source="total_money.png" Grid.Column="0" HeightRequest="50"></Image>
+                
+                <!-- Total Sales Information -->
+                <StackLayout Grid.Column="1" 
+                             Spacing="2" 
+                             VerticalOptions="Center" HorizontalOptions="EndAndExpand"
+                             Margin="15,0,0,0">
+                    <Label Text="Total Sales" 
+                           FontSize="14" 
+                           TextColor="#4A90E2" HorizontalTextAlignment="End"
+                           Opacity="0.9"/>
+                    <!--Total Sales = Opening Balance + All Transaction Totals-->
+                    <Label Text="{Binding TotalSalesWithOpening}" HorizontalTextAlignment="End"
+                           FontSize="20" 
+                           FontFamily="FontBold" x:Name="L_SumGrandtotal"
+                           TextColor="#4A90E2"/>
+                </StackLayout>
+
+            </Grid>
+        </Border>
+
+    </Grid>
+
+</ContentPage>

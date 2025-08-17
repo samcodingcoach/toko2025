@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+       x:Class="Toko2025.TabPage" Shell.NavBarIsVisible="False" xmlns:local="clr-namespace:Toko2025.Home" 
+       xmlns:cart="clr-namespace:Toko2025.Cart" 
+       xmlns:account="clr-namespace:Toko2025.Account" xmlns:order="clr-namespace:Toko2025.OrderHistory" 
+       Shell.TabBarTitleColor="#3674B5" Shell.TabBarUnselectedColor="Grey" Shell.TabBarForegroundColor="#3674B5" >
+    <TabBar>
+        <ShellContent Title="Home" Icon="home.png" ContentTemplate="{DataTemplate local:ListProduct}" Route="ListProduct" />
+
+        <ShellContent Title="Cart" Icon="cart.png" ContentTemplate="{DataTemplate cart:List_Cart}" Route="ListCart" />
+
+        <ShellContent Title="History" Icon="order_history.png" ContentTemplate="{DataTemplate order:List_History}" Route="ListHistory" />
+
+        <ShellContent Title="Account" Icon="account.png" ContentTemplate="{DataTemplate account:Settings}" Route="Settings" />
+    </TabBar>
+</Shell>

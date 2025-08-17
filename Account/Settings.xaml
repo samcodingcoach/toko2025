@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Toko2025.Account.Settings"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="#f6f6f6">
+    
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
+        
+        <!-- Header -->
+        <Grid Grid.Row="0" 
+              BackgroundColor="White" 
+              Padding="20,20,20,15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0"
+                   Text="Account" TranslationX="10"
+                   FontSize="20"
+                   FontFamily="FontBold"
+                   TextColor="#333333"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+
+            <Image Source="logout.png" HeightRequest="26" Grid.Column="1">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer x:Name="TapLogout" Tapped="TapLogout_Tapped">
+                        
+                    </TapGestureRecognizer>
+                </Image.GestureRecognizers>
+            </Image>
+            
+        </Grid>
+        
+        <!--kasir total session-->
+        <StackLayout Background="White" Grid.Row="1" Padding="20,10" Margin="0,10">
+            <!-- Section Title -->
+            
+            
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Sale History" FontFamily="FontBold" FontSize="Subtitle" VerticalOptions="Center"
+                    TextColor="#333333"/>
+                <!--json: tanggal-->
+                <Label Text="Session Date: 15 July 2025" x:Name="SessionDateLabel" VerticalOptions="Center" FontSize="Caption" FontFamily="FontRegular" HorizontalOptions="EndAndExpand"></Label>
+
+            </StackLayout>
+
+           
+            <Grid ColumnDefinitions="*,Auto" >
+                <!--json: total_uang-->
+                 <Label Text="Rp 0" x:Name="TotalUangLabel" FontSize="20" Grid.Column="0" FontFamily="FontBold"
+                       TextColor="#4A90E2">
+
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer x:Name="Tap_Reloaduang" Tapped="Tap_Reloaduang_Tapped"></TapGestureRecognizer>
+                    </Label.GestureRecognizers>
+                 </Label>
+                 <Button Background="OrangeRed" x:Name="B_Closing" Clicked="B_Closing_Clicked" Grid.Column="1" VerticalOptions="Center"
+                        TextColor="White" HeightRequest="26" Padding="10,2"
+                        FontSize="11" Text="End Closing" HorizontalOptions="Start"  CornerRadius="5" TranslationY="2"></Button>
+            </Grid>
+            
+        </StackLayout>
+
+
+        <Grid ColumnDefinitions="*,Auto" Grid.Row="2" BackgroundColor="White" Padding="20,10">
+
+            <StackLayout Grid.Column="0">
+                <Label Text="Printer Bluetooth" FontFamily="FontBold" FontSize="Subtitle" VerticalOptions="Center" TextColor="#333333"/>
+                <Label Text="Loading..." FontFamily="FontRegular" FontSize="Caption" VerticalOptions="Center"/>
+            </StackLayout>
+
+            <Image Source="forward.png" HeightRequest="32" Grid.Column="1" Opacity="0.6">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer x:Name="PrinterSetting" Tapped="PrinterSetting_Tapped">
+                        
+                    </TapGestureRecognizer>
+                </Image.GestureRecognizers>
+            </Image>
+            
+        </Grid>
+        
+        
+        <!-- Account Information -->
+        <ScrollView Grid.Row="3" 
+                    BackgroundColor="White"
+                    Margin="0,10,0,10">
+            <StackLayout Padding="20,20,20,0">
+                
+                <!-- Section Title -->
+
+
+                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,20">
+                
+                    <Label Text="Detail Information"
+                   
+                           FontFamily="FontBold" FontSize="Subtitle"
+                           TextColor="#333333" Grid.Column="0"
+                           />
+                     <Button Text="Update" Grid.Column="1" x:Name="B_UpdateProfile" Clicked="B_UpdateProfile_Clicked"
+                        BackgroundColor="#4A90E2" TextColor="White" 
+                        HeightRequest="26" Padding="10,2" CornerRadius="5" FontSize="11" FontFamily="FontBold"/>
+                    
+                </Grid>
+
+                <!-- Nama Fullname -->
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="15" Margin="0,0,0,20">
+                    <Border Grid.Column="0"
+                         BackgroundColor="#F5F5F5"
+                         WidthRequest="45"
+                         HeightRequest="45">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+
+                        <Image Source="account.png"
+                            HeightRequest="24"
+                            WidthRequest="24"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"/>
+
+                    </Border>
+
+                    <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                        <Label Text="Full Name" FontFamily="FontBold" TextColor="#333333"/>
+                        <Label Text="Nama Lengkap" x:Name="T_NamaLengkap" FontSize="Caption" TextColor="#666666"/>
+                    </StackLayout>
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer x:Name="TapFullname" Tapped="TapFullname_Tapped"></TapGestureRecognizer>
+                    </Grid.GestureRecognizers>
+                </Grid>
+
+                <!-- Username -->
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="15" Margin="0,0,0,20">
+                    <Border Grid.Column="0" BackgroundColor="#F5F5F5" WidthRequest="45" HeightRequest="45">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+
+                        <Image Source="at.png" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+
+                    </Border>
+                    <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                        <Label Text="Username" FontFamily="FontBold" TextColor="#333333"/>
+                        <Label Text="username" x:Name="T_Username" FontSize="Caption" TextColor="#666666"/>
+                    </StackLayout>
+
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer x:Name="TapUsername" Tapped="TapUsername_Tapped"></TapGestureRecognizer>
+                    </Grid.GestureRecognizers>
+
+                </Grid>
+
+                <!-- Email -->
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="15" Margin="0,0,0,20">
+                    <Border Grid.Column="0" BackgroundColor="#F5F5F5" WidthRequest="45" HeightRequest="45">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+
+                        <Image Source="email.png" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+
+                    </Border>
+
+                    <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                        <Label Text="Email" FontFamily="FontBold" TextColor="#333333"/>
+                        <Label Text="example@gmail.com" x:Name="T_Email" FontSize="Caption" TextColor="#666666"/>
+                    </StackLayout>
+
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer x:Name="TapEmail" Tapped="TapEmail_Tapped"></TapGestureRecognizer>
+                    </Grid.GestureRecognizers>
+                </Grid>
+                
+                <!--hp-->
+
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="15" Margin="0,0,0,20">
+                    <Border Grid.Column="0" BackgroundColor="#F5F5F5" WidthRequest="45" HeightRequest="45">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+
+                        <Image Source="wa.png" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+
+                    </Border>
+
+                    <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                        <Label Text="WhatsApp" FontFamily="FontBold" TextColor="#333333"/>
+                        <Label Text="+6285200000000" x:Name="T_Hp" FontSize="Caption" TextColor="#666666"/>
+                    </StackLayout>
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer x:Name="TapHP" Tapped="TapHP_Tapped"></TapGestureRecognizer>
+                    </Grid.GestureRecognizers>
+                </Grid>
+                
+                <!--password-->
+                
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="15" Margin="0,0,0,20">
+                    <Border Grid.Column="0" BackgroundColor="#F5F5F5" WidthRequest="45" HeightRequest="45">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+
+                        <Image Source="password.png" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        
+                    </Border>
+
+                    <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                        <Label Text="Password" FontFamily="FontBold" TextColor="#333333"/>
+                        <Label Text="****" FontSize="Caption" x:Name="T_Password" TextColor="#666666"/>
+                    </StackLayout>
+                </Grid>
+                
+                <!--role-->
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="15" Margin="0,0,0,20">
+                    <Border Grid.Column="0" BackgroundColor="#F5F5F5" WidthRequest="45" HeightRequest="45">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+
+                        <Image Source="role.png" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+
+                    </Border>
+
+                    <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                        <Label Text="Roles" FontFamily="FontBold" TextColor="#333333"/>
+                        <Label Text="Kasir" x:Name="T_Kasir" FontSize="Caption" TextColor="#666666"/>
+                    </StackLayout>
+                </Grid>
+
+               
+
+            </StackLayout>
+        </ScrollView>
+
+        
+        
+     
+    </Grid>
+</ContentPage>

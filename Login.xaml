@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Toko2025.Login" NavigationPage.HasNavigationBar="False"
+             BackgroundColor="White">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Green gradient header -->
+        <BoxView Grid.Row="0">
+            <BoxView.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#90A955" Offset="0.0"/>
+                    <GradientStop Color="#4C6637" Offset="1.0"/>
+                </LinearGradientBrush>
+            </BoxView.Background>
+        </BoxView>
+
+        <!-- Login form -->
+        <StackLayout Grid.Row="1" 
+                     Padding="30,40,30,30" 
+                     Spacing="20"
+                     BackgroundColor="White">
+            
+            <Label Text="Welcome back" 
+                   FontSize="28" 
+                   FontAttributes="Bold"
+                   TextColor="#333333"
+                   HorizontalOptions="Center"/>
+
+            <StackLayout Spacing="15" Margin="0,20,0,0">
+                <StackLayout Spacing="8">
+                    <Label Text="Username" 
+                           FontSize="16" 
+                           TextColor="#333333"/>
+                    <Border Stroke="#E0E0E0"
+                            StrokeThickness="0.5"
+                            BackgroundColor="#F5F5F5"
+                            Padding="10,0,0,0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="5"/>
+                        </Border.StrokeShape>
+                        <Entry Placeholder="Enter your username" x:Name="UsernameEntry"
+                               PlaceholderColor="#999999"
+                               BackgroundColor="Transparent"
+                               HeightRequest="50"
+                               VerticalOptions="Center"/>
+                    </Border>
+                </StackLayout>
+
+                <StackLayout Spacing="8">
+                    <Label Text="Password" 
+                           FontSize="16" 
+                           TextColor="#333333"/>
+                    <Border Stroke="#E0E0E0"
+                            StrokeThickness="0.5"
+                            BackgroundColor="#F5F5F5"
+                            Padding="10,0,10,0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="5"/>
+                        </Border.StrokeShape>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Entry x:Name="PasswordEntry"
+                                   Grid.Column="0"
+                                   Placeholder="Enter your password" 
+                                   PlaceholderColor="#999999"
+                                   IsPassword="True"
+                                   BackgroundColor="Transparent"
+                                   HeightRequest="50"
+                                   VerticalOptions="Center"/>
+                            
+                            <ImageButton x:Name="TogglePasswordButton"
+                                         Grid.Column="1"
+                                         Source="eye_closed.png" TranslationX="15"
+                                         HeightRequest="24" Opacity="0.5"
+                                         BackgroundColor="Transparent"
+                                         VerticalOptions="Center"
+                                         Clicked="OnTogglePasswordVisibility"/>
+                        </Grid>
+                    </Border>
+                </StackLayout>
+            </StackLayout>
+
+            <Button Text="Log in"
+                    x:Name="ButtonLogin" Clicked="ButtonLogin_Clicked"
+                    HeightRequest="50"
+                    CornerRadius="8"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    Margin="0,20,0,0"/>
+
+            <Label HorizontalOptions="Center" Margin="0,10,0,0">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Don't have an account? " TextColor="#999999"/>
+                        <Span Text="Sign up" TextColor="#4A90E2" TextDecorations="Underline"/>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+        </StackLayout>
+    </Grid>
+</ContentPage>

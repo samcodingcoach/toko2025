@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Toko2025.Account.Bluetooth" NavigationPage.HasNavigationBar="False">
+    
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <Grid Padding="10,15" Grid.Row="0" ColumnDefinitions="Auto,*,Auto" BackgroundColor="#4A90E2">
+            <!-- Back button -->
+            <Image Source="back_white.png" HeightRequest="28" 
+                 VerticalOptions="Center" Grid.Column="0" Margin="0,0,15,0">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer x:Name="BackTap"/>
+                </Image.GestureRecognizers>
+            </Image>
+
+            <!-- Header label -->
+            <Label Text="Find Bluetooth" TranslationY="-2" FontSize="20" FontFamily="FontBold" 
+                    TextColor="White" 
+                    Grid.Column="1" VerticalOptions="Center"/>
+
+            <Image x:Name="RefreshImage" Source="refresh_bt.png" Grid.Column="2" HeightRequest="22" TranslationX="-7">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer x:Name="RefreshTap" />
+                </Image.GestureRecognizers>
+            </Image>
+        </Grid>
+
+        <!-- Content area with both loading and device list -->
+        <Grid Grid.Row="1" Background="WhiteSmoke">
+            <!-- Loading indicator -->
+            <ActivityIndicator IsRunning="{Binding IsRefreshing}" 
+                              IsVisible="{Binding IsRefreshing}"
+                              Color="#4A90E2"
+                              VerticalOptions="Center"
+                              HorizontalOptions="Center"/>
+
+            <!-- Device list -->
+            <ScrollView x:Name="DeviceListScrollView">
+                <StackLayout Padding="15">
+                    <CollectionView ItemsSource="{Binding Devices}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="*,Auto" 
+                                      Padding="15" 
+                                      Margin="0,5"
+                                      BackgroundColor="White">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnDeviceTapped"/>
+                                    </Grid.GestureRecognizers>
+                                    
+                                    <StackLayout Grid.Column="0">
+                                        <Label Text="{Binding Name}" 
+                                               FontSize="Subtitle" 
+                                               FontFamily="FontBold" 
+                                               TextColor="#4A90E2"/>
+                                        <Label Text="{Binding MacAddress}" 
+                                               FontSize="Caption" 
+                                               FontFamily="FontRegular"/>
+                                    </StackLayout>
+                                    
+                                    <Image Grid.Column="1" 
+                                           Source="checklist_green.png" 
+                                           HeightRequest="24" 
+                                           VerticalOptions="Center" 
+                                           HorizontalOptions="End"
+                                           IsVisible="{Binding IsSelected}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                        
+                        <CollectionView.EmptyView>
+                            <StackLayout VerticalOptions="Center" 
+                                         HorizontalOptions="Center" 
+                                         Padding="40">
+                                <Label Text="No Bluetooth devices found" 
+                                       FontSize="16" 
+                                       TextColor="#666666" 
+                                       HorizontalTextAlignment="Center"/>
+                                <Label Text="Make sure Bluetooth is enabled and devices are paired" 
+                                       FontSize="14" 
+                                       TextColor="#999999" 
+                                       HorizontalTextAlignment="Center"
+                                       Margin="0,10,0,0"/>
+                            </StackLayout>
+                        </CollectionView.EmptyView>
+                    </CollectionView>
+                </StackLayout>
+            </ScrollView>
+        </Grid>
+
+        <Button x:Name="SaveButton" 
+                Grid.Row="2" 
+                Margin="10"
+                FontFamily="FontBold" 
+                FontSize="Subtitle" 
+                BackgroundColor="#4A90E2"
+                CornerRadius="8" 
+                Text="Save Configuration"/>
+    </Grid>
+</ContentPage>

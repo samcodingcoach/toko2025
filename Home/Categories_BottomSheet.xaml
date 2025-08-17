@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<bottomsheet:BottomSheet xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:bottomsheet="clr-namespace:The49.Maui.BottomSheet;assembly=The49.Maui.BottomSheet"
+             x:Class="Toko2025.Home.Categories_BottomSheet"
+             HasBackdrop="True">
+
+    <bottomsheet:BottomSheet.Detents>
+        <bottomsheet:RatioDetent Ratio="0.45" />
+    </bottomsheet:BottomSheet.Detents>
+    
+    <Grid RowDefinitions="Auto,Auto,*">
+        
+        <StackLayout Padding="20,10" Grid.Row="0">
+            <BoxView BackgroundColor="Gray" Opacity="0.3" HeightRequest="3" WidthRequest="30" HorizontalOptions="Center"/>
+            <Label Text="Categories" FontSize="18" FontFamily="FontBold" Margin="0,10,0,0"/>
+        </StackLayout>
+        
+        <!--search-->
+        <Border Grid.Row="1" Margin="20,10,20,10" Stroke="#E0E0E0" StrokeThickness="0" BackgroundColor="#F0F0F0" HeightRequest="45">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="8"/>
+            </Border.StrokeShape>
+            <Grid Padding="15,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image Source="search.png" HeightRequest="24" Opacity="0.5"/>
+                <Entry Grid.Column="1" TranslationX="5"
+                       Text="{Binding SearchText}"
+                       TextChanged="OnSearchTextChanged"
+                       Placeholder="Search categories..." 
+                       PlaceholderColor="#999999"
+                       BackgroundColor="Transparent"
+                       VerticalOptions="Center"/>
+            </Grid>
+        </Border>
+
+        <!--categories-->
+        <ScrollView Grid.Row="2" Margin="20,10,20,10">
+            <CollectionView ItemsSource="{Binding Categories}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,7.5" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="15">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnCategoryTapped"/>
+                            </Grid.GestureRecognizers>
+                            
+                            <Border Grid.Column="0" Stroke="#E0E0E0" StrokeThickness="0"
+                                    BackgroundColor="#F0F0F0" HeightRequest="45" WidthRequest="45">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Grid Padding="12,0">
+                                    <Image Source="category_icon.png" HeightRequest="20" Opacity="0.5"/>
+                                </Grid>
+                            </Border>
+
+                            <Label Text="{Binding Name}" Grid.Column="1" 
+                                   VerticalOptions="Center" FontSize="Subtitle" FontFamily="FontBold"/>
+                            
+                            <Frame Grid.Column="2" BackgroundColor="#4A90E2" BorderColor="Transparent" 
+                                   Padding="5,3" CornerRadius="25" VerticalOptions="Center" HorizontalOptions="Center">
+                                <Label Text="{Binding ProductCount}" TextColor="White" FontFamily="FontBold"/>
+                            </Frame>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+
+    </Grid>
+    
+</bottomsheet:BottomSheet>

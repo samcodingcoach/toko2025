@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<bottomsheet:BottomSheet xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" HasBackdrop="True"    
+             xmlns:bottomsheet="clr-namespace:The49.Maui.BottomSheet;assembly=The49.Maui.BottomSheet" BackgroundColor="White" 
+             x:Class="Toko2025.Cart.CheckOut">
+
+    <bottomsheet:BottomSheet.Detents>
+        <bottomsheet:RatioDetent Ratio="0.70" />
+    </bottomsheet:BottomSheet.Detents>
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="20">
+
+        <StackLayout Grid.Row="0">
+            <BoxView BackgroundColor="Gray" Opacity="0.3" HeightRequest="3" WidthRequest="30" HorizontalOptions="Center" Margin="0,0,0,15"/>
+            <Label Text="Payment Method:" FontFamily="FontBold" TextColor="#333333" FontSize="16" FontAttributes="Bold" />
+            <Border Stroke="LightGray" Margin="0,10" StrokeThickness="0.2" BackgroundColor="#f6f6f6" Padding="10,5" StrokeShape="RoundRectangle 8">
+                <StackLayout Orientation="Horizontal" Spacing="20" Margin="10,0">
+                    <RadioButton Content="Cash" x:Name="R_Cash" GroupName="PaymentMethod" FontSize="14" IsChecked="True"/>
+                    <RadioButton Content="QRIS" x:Name="R_QRIS" GroupName="PaymentMethod" FontSize="14"/>
+                    <RadioButton Content="Bank Transfer" x:Name="R_BankTransfer" GroupName="PaymentMethod" FontSize="14"/>
+                </StackLayout>
+            </Border>
+
+            <Label Text="Summary Payment:" FontFamily="FontBold" TextColor="#333333" FontSize="16" FontAttributes="Bold"/>
+            <StackLayout Spacing="2" Margin="0,10,0,0">
+
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="Subtotal Product" Grid.Column="0" FontFamily="FontRegular"></Label>
+                    <Label Text="0" x:Name="L_SubtotalProduct" Grid.Column="1" FontFamily="FontBold" HorizontalTextAlignment="End" TextColor="#333333"></Label>
+                </Grid>
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="Fee Payment" Grid.Column="0" FontFamily="FontRegular"></Label>
+                    <Label x:Name="L_FeePayment" Text="0" Grid.Column="1" FontFamily="FontBold" HorizontalTextAlignment="End" TextColor="#333333"></Label>
+                </Grid>
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="Discount" Grid.Column="0" FontFamily="FontRegular"></Label>
+                    <Label Text="0" x:Name="L_Diskon" Grid.Column="1" FontFamily="FontBold" HorizontalTextAlignment="End" TextColor="SeaGreen"></Label>
+                </Grid>
+                <BoxView HeightRequest="0.1" Opacity="0.5" Margin="0,10" BackgroundColor="LightGrey"></BoxView>
+
+                <Grid ColumnDefinitions="*,Auto" Margin="0">
+                    <Label Text="Grand Total" Grid.Column="0" FontFamily="FontBold" TextColor="SeaGreen"></Label>
+                    <Label Text="0" x:Name="L_GrandTotal" Grid.Column="1" FontFamily="FontBold" HorizontalTextAlignment="End" TextColor="SeaGreen"></Label>
+                </Grid>
+
+            </StackLayout>
+        </StackLayout>
+        <!--tunai-->
+        <StackLayout Grid.Row="1" x:Name="StackLayout_Cash" IsVisible="True">
+            <StackLayout Spacing="5" Margin="0,10,0,0">
+                <Border Stroke="LightGray" Margin="0,10,0,0" StrokeThickness="0.2" BackgroundColor="#f6f6f6" Padding="10" StrokeShape="RoundRectangle 8">
+                    <StackLayout>
+                        <Label Text="Amount Customer Payment"></Label>
+                        <Entry Placeholder="0" FontFamily="FontBold" x:Name="E_AmountCustomerPayment" HorizontalTextAlignment="End" FontSize="18" Keyboard="Numeric"></Entry>
+                    </StackLayout>
+                </Border>
+                
+                <Border Stroke="LightGray" Margin="0,10" StrokeThickness="0.2" BackgroundColor="#f6f6f6" Padding="10" StrokeShape="RoundRectangle 8">
+                    <StackLayout>
+                        <Label Text="Cash Return"></Label>
+                        <Entry Placeholder="0" x:Name="E_CashReturn" HorizontalTextAlignment="End" FontFamily="FontBold" FontSize="18" IsReadOnly="True"></Entry>
+                    </StackLayout>
+                </Border>
+            </StackLayout>
+            <StackLayout Grid.Row="2">
+                <Button Text="Procces Payment" Clicked="B_Payment_Clicked" Opacity="0.6" IsEnabled="False" x:Name="B_Payment" BackgroundColor="#4A90E2" FontSize="18"></Button>
+            </StackLayout>
+        </StackLayout>
+        <!--qris-->
+        <ScrollView Grid.Row="1" x:Name="StackLayout_Qris" IsVisible="False" Orientation="Vertical">
+            <StackLayout>
+                <StackLayout Orientation="Horizontal" VerticalOptions="Center" Margin="0,10,0,5">
+                    <Label Text="Order ID:" FontFamily="FontRegular"></Label>
+                    <Label Text="-" FontFamily="FontBold" IsVisible="False" x:Name="L_OrderId" HorizontalOptions="EndAndExpand"></Label>
+                    
+                     <Button Text="Create QRIS" HorizontalOptions="EndAndExpand" x:Name="B_CreateQris" 
+                              Clicked="B_CreateQris_Clicked" Padding="10,5"  BackgroundColor="OrangeRed" FontSize="11" TextColor="White" />
+                    
+                </StackLayout>
+
+                <!-- Status and Countdown Section -->
+                <StackLayout x:Name="StatusSection" IsVisible="False" Margin="0,10,0,0">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Payment Status:"  FontSize="14"/>
+                        <Label x:Name="L_QrisStatus" Grid.Column="1" Text="Pending" FontFamily="FontBold" TextColor="Orange"/>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Time Remaining:"  FontSize="14"/>
+                        <Label x:Name="L_Countdown" Grid.Column="1" Text="05:00" FontFamily="FontBold"  TextColor="Red" HorizontalTextAlignment="Center"/>
+                    </Grid>
+                </StackLayout>
+
+                <Image x:Name="ImageQris" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" 
+                       WidthRequest="240" HeightRequest="240"  IsVisible="False"/>
+                
+                
+                
+              
+            </StackLayout>
+        </ScrollView>
+        <!--transfer bank-->
+
+        <ScrollView Grid.Row="1" x:Name="StackLayout_Banktransfer" IsVisible="False" Margin="0,10">
+            <StackLayout>
+                <Label Text="Account Name" FontFamily="FontRegular" TextColor="#333333"></Label>
+                <Border Stroke="LightGray" Margin="0,5,0,0" StrokeThickness="0.2" BackgroundColor="#f6f6f6" 
+                    Padding="10,2" StrokeShape="RoundRectangle 8">
+                    <StackLayout>
+
+                        <Entry Placeholder="Enter Account Name" FontFamily="FontBold" 
+                           x:Name="E_AccountName" 
+                           FontSize="14"></Entry>
+
+                    </StackLayout>
+                </Border>
+
+                <Label Text="Bank" FontFamily="FontRegular" TextColor="#333333" Margin="0,10,0,5"></Label>
+                <Border Stroke="LightGray" Margin="0,5,0,0" StrokeThickness="0.2" BackgroundColor="#f6f6f6" Padding="10,2" StrokeShape="RoundRectangle 8">
+                    <StackLayout Orientation="Horizontal">
+                        <Picker x:Name="P_BankList" FontFamily="FontBold" FontSize="14" Title="Select a Bank">
+                            <Picker.Items>
+                                <x:String>Bank Mandiri</x:String>
+                                <x:String>Bank Central Asia (BCA)</x:String>
+                                <x:String>Bank Negara Indonesia (BNI)</x:String>
+                                <x:String>Bank Rakyat Indonesia (BRI)</x:String>
+                                <x:String>Bank Syariah Indonesia (BSI)</x:String>
+                                <x:String>Lainnya</x:String>
+                            </Picker.Items>
+                        </Picker>
+
+                        <Image Source="forward.png" HeightRequest="24" HorizontalOptions="EndAndExpand" Rotation="90"></Image>
+
+                    </StackLayout>
+                </Border>
+
+                <Label Text="Transfer Evidence" FontFamily="FontRegular" TextColor="#333333" Margin="0,10,0,5"></Label>
+
+                <!-- Simple Capture Area -->
+                <Border x:Name="CaptureAreaBorder" Stroke="#ddd" StrokeThickness="2" BackgroundColor="#f9f9f9" 
+                        Padding="40,60" StrokeShape="RoundRectangle 12"
+                        StrokeDashArray="8,8" StrokeDashOffset="4" Margin="0,5,0,15">
+
+                    <!-- Single container for both states -->
+                    <Grid>
+                        <!-- Initial Capture State -->
+                        <StackLayout x:Name="InitialCaptureState" IsVisible="True" Spacing="15" HorizontalOptions="Center">
+                            <Image Source="icon_caputer.png" HeightRequest="60" WidthRequest="60" Opacity="0.4" />
+                            <Label Text="Tap to capture image" FontFamily="FontRegular" FontSize="16" 
+                                   TextColor="#999" HorizontalTextAlignment="Center" />
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="TapCapture_Tapped"/>
+                            </StackLayout.GestureRecognizers>
+                        </StackLayout>
+
+                        <!-- After Capture State -->
+                        <StackLayout x:Name="AfterCaptureState" IsVisible="False" Spacing="0">
+                            <!-- Image Preview with close button -->
+                            <Grid>
+                                <Image x:Name="CapturedPreviewImage" Aspect="AspectFill" HeightRequest="250"
+                                       BackgroundColor="White" HorizontalOptions="FillAndExpand">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnCapturedImageTapped"/>
+                                    </Image.GestureRecognizers>
+                                </Image>
+
+                                <!-- Close button overlay -->
+                                <Button x:Name="B_CloseImage" Text="✕" FontSize="18" 
+                                        BackgroundColor="Red" TextColor="White" 
+                                        WidthRequest="32" HeightRequest="32" CornerRadius="16"
+                                        HorizontalOptions="End" VerticalOptions="Start" 
+                                        Margin="10" Padding="0"
+                                        Clicked="B_CloseImage_Clicked"/>
+                            </Grid>
+                        </StackLayout>
+                    </Grid>
+                </Border>
+
+                <!-- Action Buttons - Outside Border -->
+                <Grid x:Name="ActionButtonsGrid" ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,0,0,15" IsVisible="False">
+                    <Button x:Name="B_RetakePhoto" Text="Retake Photo" Grid.Column="0"
+                            BackgroundColor="#007AFF" TextColor="White" FontSize="14" 
+                            Padding="12" CornerRadius="8" FontFamily="FontBold"
+                            Clicked="B_RetakePhoto_Clicked"/>
+
+                    <Button x:Name="B_ImageCaptured" Text="Image captured" Grid.Column="1"
+                            BackgroundColor="#34C759" TextColor="White" FontSize="14" 
+                            Padding="12" CornerRadius="8" FontFamily="FontBold"
+                            IsEnabled="False" Opacity="0.9"/>
+                </Grid>
+
+                <StackLayout Orientation="Horizontal" Spacing="0" TranslationX="-10">
+                    <CheckBox x:Name="CB_Confirmation" VerticalOptions="Center"/>
+                    <Label Text="I confirm that all information entered is valid" 
+                    FontFamily="FontBold" FontSize="Caption"
+                    TextColor="#333333" 
+                            
+                    VerticalOptions="Center"/>
+                </StackLayout>
+
+                <Button Text="Save Transfer Data" x:Name="B_Transfer" Clicked="B_Transfer_Clicked" FontFamily="FontBold" Margin="0,10,0,0" Opacity="0.3" IsEnabled="False" Background="#4A90E2"></Button>
+            </StackLayout>
+        </ScrollView>
+
+    </Grid>
+</bottomsheet:BottomSheet>

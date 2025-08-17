@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Toko2025.Home.ScanBarcode"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.Maui.Controls"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Color="Transparent" Size="350, 450" CanBeDismissedByTappingOutsideOfPopup="False"
+             >
+    <Frame Padding="10" BorderColor="Transparent" CornerRadius="20">
+        <Grid RowDefinitions="Auto,*,Auto">
+
+            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto">
+
+                <ImageButton Source="forward.png" x:Name="ImageBack" Clicked="ImageBack_Clicked" BackgroundColor="Transparent" Grid.Column="0" WidthRequest="30" Rotation="180" HeightRequest="32"></ImageButton>
+                <Label Text="Search Product" Grid.Column="1" FontSize="16" TranslationY="2" HorizontalOptions="Center" TranslationX="-8" FontFamily="FontBold" TextColor="#333333"></Label>
+                
+            </Grid>
+
+            <StackLayout Grid.Row="1" IsVisible="True" x:Name="Layout_Info" Margin="0,10,0,0" Spacing="10">
+                <Label Text="Scan Barcode/QRCode" FontSize="18" FontFamily="FontBold" TextColor="#333333" HorizontalTextAlignment="Center"></Label>
+                <Label Text="Point your camera at a Barcode or QR" FontFamily="FontRegular" HorizontalOptions="Center"></Label>
+
+                <Image Source="barcode_color.png" VerticalOptions="Center" Margin="0,50,0,0"></Image>
+            </StackLayout>
+            
+            <!--camera view-->
+            <StackLayout Grid.Row="1" IsVisible="False" x:Name="Layout_Camera">
+                <zxing:CameraBarcodeReaderView x:Name="barcodeReader"  BarcodesDetected="OnBarcodesDetected" IsDetecting="True" 
+                HorizontalOptions="Center"
+                VerticalOptions="Center" />
+
+            </StackLayout>
+            <!--tombol scan-->
+           
+            <!--cancel-->
+            <StackLayout Grid.Row="2" Margin="0,10" Spacing="10">
+                <StackLayout VerticalOptions="Center" x:Name="Tombol_Scan">
+                    <Button Text="Scan Now" x:Name="B_Scan" FontFamily="FontBold" FontSize="18" Clicked="B_Scan_Clicked">
+                        <Button.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#4A90E2" Offset="0.0" />
+                                <GradientStop Color="#314BB5" Offset="0.5" />
+                                <GradientStop Color="#262121" Offset="1.0" />
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
+                </StackLayout>
+                <Label Text="Cancel. Back to Home" TextColor="LightGoldenrodYellow" FontSize="Caption" Opacity="0.6" FontFamily="FontRegular" TextDecorations="Underline" HorizontalTextAlignment="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer x:Name="Back" Tapped="Back_Tapped"></TapGestureRecognizer>
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
+
+        </Grid>
+    </Frame>
+</toolkit:Popup>

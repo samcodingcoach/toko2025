@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" BackgroundColor="#f6f6f6"
+             x:Class="Toko2025.Home.ListProduct" NavigationPage.HasBackButton="False" 
+             NavigationPage.HasNavigationBar="False"
+             
+             Title="ListProduct">
+    <Grid Padding="0" RowDefinitions="Auto,Auto,*" RowSpacing="15">
+       
+
+        <!-- Header -->   <!-- Search Bar -->
+        <Grid Grid.Row="0" Padding="20,20,20,0" ColumnSpacing="10" ColumnDefinitions="*,Auto">
+           
+            <Border Grid.Column="0"
+                
+                 BackgroundColor="#F2F2F2" StrokeThickness="0.3"
+                 HeightRequest="45">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8"/>
+                </Border.StrokeShape>
+                <Grid Padding="15,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="search.png" HeightRequest="22" Opacity="0.5"></Image>
+                    <Entry x:Name="SearchEntry" Grid.Column="1" TranslationX="5"  TranslationY="0.1"
+                Placeholder="Search Product or Barcode" 
+                PlaceholderColor="#999999"
+                BackgroundColor="Transparent" ClearButtonVisibility="WhileEditing"
+                TextChanged="OnSearchTextChanged"
+                VerticalOptions="Center"/>
+                </Grid>
+            </Border>
+
+            <Border Stroke="#E0E0E0" Grid.Column="1"
+                    StrokeThickness="0.5"
+                    BackgroundColor="#4A90E2" 
+                    Padding="2">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8"/>
+                </Border.StrokeShape>
+                <Image Source="scanner.png" HeightRequest="35">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer x:Name="TapBarcode" Tapped="TapBarcode_Tapped"></TapGestureRecognizer>
+                    </Image.GestureRecognizers>
+                </Image>
+            </Border>
+            
+            
+            
+        </Grid>
+
+     
+       
+
+        <!-- Filter Options -->
+        <ScrollView Grid.Row="1" 
+                    Orientation="Horizontal"
+                    HorizontalScrollBarVisibility="Never"
+                    Padding="20,0">
+            <HorizontalStackLayout Spacing="15">
+
+                <Border
+                    Stroke="#E0E0E0"
+                    StrokeThickness="0.5"
+                    BackgroundColor="Transparent" Padding="15,5,10,5">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8"/>
+                    </Border.StrokeShape>
+
+                    <HorizontalStackLayout VerticalOptions="Center">
+                        <HorizontalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer x:Name="TapShowCategories" NumberOfTapsRequired="1" Tapped="TapShowCategories_Tapped"></TapGestureRecognizer>
+                        </HorizontalStackLayout.GestureRecognizers>
+                        <Label Text="Categories" FontFamily="FontBold" TextColor="#333333"></Label>
+                        <Image Source="forward.png" Margin="10,0,0,0" HeightRequest="24" Opacity="0.7" Rotation="90"></Image>
+                    </HorizontalStackLayout>
+
+                </Border>
+
+                <Border
+                    Stroke="#E0E0E0"
+                    StrokeThickness="0.5"
+                    BackgroundColor="Transparent" Padding="15,5,10,5"
+                 >
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8"/>
+                    </Border.StrokeShape>
+
+                    <HorizontalStackLayout VerticalOptions="Center">
+                        <HorizontalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer x:Name="TapShowBrands" NumberOfTapsRequired="1" Tapped="TapShowBrands_Tapped"></TapGestureRecognizer>
+                        </HorizontalStackLayout.GestureRecognizers>
+                        <Label Text="Brands" FontFamily="FontBold" TextColor="#333333"></Label>
+                        <Image Source="forward.png" Margin="10,0,0,0" HeightRequest="24" Opacity="0.7" Rotation="90"></Image>
+                    </HorizontalStackLayout>
+
+                </Border>
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <!-- Products Grid -->
+        <RefreshView Grid.Row="2" x:Name="ProductsRefreshView" Margin="20,0,20,5"
+                     IsRefreshing="{Binding IsLoading}" Command="{Binding RefreshCommand}" >
+            <CollectionView x:Name="ProductsCollectionView" ItemsSource="{Binding Products}" BackgroundColor="Transparent" ItemSizingStrategy="MeasureFirstItem">
+
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="2"
+                     VerticalItemSpacing="10" HorizontalItemSpacing="10" />
+                </CollectionView.ItemsLayout>
+               
+                
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <StackLayout Spacing="0">
+                                <Border BackgroundColor="#F2F2F2" 
+                                        StrokeThickness="0.3" 
+                                        Margin="0,0,0,10"
+                                        HeightRequest="180">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Image Source="{Binding ImageUrl}" 
+                                           Aspect="AspectFill"
+                                           BackgroundColor="#F2F2F2">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer x:Name="TapDetailProduct" Tapped="TapDetailProduct_Tapped"
+                                                />
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                    
+                                </Border>
+                                
+                                <Label Text="{Binding nama_barang}" 
+                                       Margin="1,0" 
+                                       LineBreakMode="TailTruncation" 
+                                       FontFamily="FontBold"
+                                       />
+
+                                <Grid ColumnDefinitions="*,Auto" 
+                                      ColumnSpacing="10" 
+                                      Margin="1,0">
+                                    <Label Text="{Binding FormattedPrice}" 
+                                           Grid.Column="0" 
+                                           TextColor="#4A90E2" 
+                                           FontFamily="FontBold" />
+
+                                    <Border BackgroundColor="White"
+                                            Stroke="#E0E0E0" 
+                                            StrokeThickness="0.1" VerticalOptions="Start" TranslationY="0"
+                                            Padding="10,2"
+                                            Grid.Column="1">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="5"/>
+                                        </Border.StrokeShape>
+                                        <StackLayout Orientation="Horizontal" Spacing="5">
+                                            <Image Source="stok.png" Opacity="0.7" HeightRequest="14"  
+                                                   VerticalOptions="Center">
+                                            </Image>
+                                            <Label Text="{Binding FormattedStock,StringFormat='{0} items'}" FontFamily="FontBold" 
+                                                    Grid.Column="2" FontSize="11" VerticalTextAlignment="Center"/>
+                                        </StackLayout>
+                                    </Border>
+                                    
+                                    
+                                </Grid>
+                            </StackLayout>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <StackLayout Padding="20" VerticalOptions="Center">
+                        <Label Text="No products found" 
+                               FontSize="16" 
+                               TextColor="#666666"
+                               HorizontalOptions="Center"/>
+                        <Label Text="Try adjusting your search or filters" 
+                               FontSize="12" 
+                               TextColor="#999999"
+                               HorizontalOptions="Center"/>
+                    </StackLayout>
+                </CollectionView.EmptyView>
+            </CollectionView>
+        </RefreshView>
+
+        <!-- Loading Indicator -->
+        <Grid x:Name="LoadingOverlay" 
+              Grid.RowSpan="3"
+              BackgroundColor="#80000000" 
+              IsVisible="{Binding IsLoading}">
+            <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="0">
+                <ActivityIndicator Color="White" 
+                                 IsRunning="{Binding IsLoading}" 
+                                 HeightRequest="50"
+                                 WidthRequest="50"/>
+                <Label Text="Loading Products..." 
+                       TextColor="White" 
+                       FontSize="16" 
+                       FontFamily="FontBold"
+                       HorizontalOptions="Center"/>
+            </StackLayout>
+        </Grid>
+
+    </Grid>
+</ContentPage>
