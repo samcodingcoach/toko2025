@@ -118,4 +118,8 @@
 	  <Folder Include="Resources\Pdf\" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<PackageReference Include="DotNetMeteor.HotReload.Plugin" Version="3.*"/>
+	</ItemGroup>
+
 </Project>

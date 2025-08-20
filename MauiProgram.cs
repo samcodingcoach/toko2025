@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using The49.Maui.BottomSheet;
 using Toko2025.Services;
 using ZXing.Net.Maui.Controls;
+using DotNet.Meteor.HotReload.Plugin;
 
 namespace Toko2025;
 
@@ -30,6 +31,7 @@ public static class MauiProgram
 
 
 #if DEBUG
+		builder.EnableHotReload();
         builder.Logging.AddDebug();
 #endif
 
