@@ -99,7 +99,7 @@
               
             </StackLayout>
         </ScrollView>
-        <!--transfer bank-->
+        <!--transfer bank--> 
 
         <ScrollView Grid.Row="1" x:Name="StackLayout_Banktransfer" IsVisible="False" Margin="0,10">
             <StackLayout>

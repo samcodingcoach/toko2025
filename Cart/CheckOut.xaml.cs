@@ -411,6 +411,22 @@ public partial class CheckOut : BottomSheet, INotifyPropertyChanged
                 return;
             }
 
+            // === DETERMINE PAYMENT METHOD ===
+            int id_pembayaran = GetSelectedPaymentMethod();
+            
+            if (id_pembayaran <= 0)
+            {
+                await ShowToast("Please select a payment method");
+                return;
+            }
+
+            // === VALIDASI CASH BAYAR (hanya untuk pembayaran tunai) ===
+            if (id_pembayaran == 1 && _amountCustomerPayment <= 0) // 1 = Cash payment
+            {
+                await ShowToast("Cash payment amount is required and must be greater than 0");
+                return;
+            }
+
             // === GET USER LOGIN ===
             var (id_user, username, nama_lengkap, id_sesi, email, hp) = Login.GetLoggedInUser();
             
@@ -426,15 +442,6 @@ public partial class CheckOut : BottomSheet, INotifyPropertyChanged
             if (penjualanId <= 0)
             {
                 await ShowToast("No active transaction found");
-                return;
-            }
-
-            // === DETERMINE PAYMENT METHOD ===
-            int id_pembayaran = GetSelectedPaymentMethod();
-            
-            if (id_pembayaran <= 0)
-            {
-                await ShowToast("Please select a payment method");
                 return;
             }
 
@@ -627,6 +634,12 @@ public partial class CheckOut : BottomSheet, INotifyPropertyChanged
             System.Diagnostics.Debug.WriteLine($"id_pembayaran: {id_pembayaran}");
             System.Diagnostics.Debug.WriteLine($"potongan: {potongan}");
             System.Diagnostics.Debug.WriteLine($"grand_total: {grand_total}");
+            // Tentukan nilai cash_bayar dan kembalian berdasarkan metode pembayaran
+            decimal cashBayar = (id_pembayaran == 1) ? _amountCustomerPayment : 0; // Hanya untuk Cash (id=1)
+            decimal kembalian = (id_pembayaran == 1) ? _cashReturn : 0; // Hanya untuk Cash (id=1)
+            
+            System.Diagnostics.Debug.WriteLine($"cash_bayar: {cashBayar}");
+            System.Diagnostics.Debug.WriteLine($"kembalian: {kembalian}");
 
             // Prepare form data sesuai dokumentasi endpoint
             var formParams = new List<KeyValuePair<string, string>>
@@ -636,7 +649,9 @@ public partial class CheckOut : BottomSheet, INotifyPropertyChanged
                 new KeyValuePair<string, string>("potongan", potongan.ToString("0")), // Format as integer
                 new KeyValuePair<string, string>("grand_total", grand_total.ToString("0")), // Format as integer
                 new KeyValuePair<string, string>("aktif", "0"), // Set to 0 as specified
-                new KeyValuePair<string, string>("biaya_lain", "0") // Set to 0 as specified
+                new KeyValuePair<string, string>("biaya_lain", "0"), // Set to 0 as specified
+                new KeyValuePair<string, string>("cash_bayar", cashBayar.ToString("0")), // Amount customer payment (hanya untuk Cash)
+                new KeyValuePair<string, string>("kembalian", kembalian.ToString("0")) // Cash return/change (hanya untuk Cash)
             };
 
             // Debug: Print form data yang akan dikirim
