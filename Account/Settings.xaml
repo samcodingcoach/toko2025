@@ -69,7 +69,7 @@
 
             <StackLayout Grid.Column="0">
                 <Label Text="Printer Bluetooth" FontFamily="FontBold" FontSize="Subtitle" VerticalOptions="Center" TextColor="#333333"/>
-                <Label Text="Loading..." FontFamily="FontRegular" FontSize="Caption" VerticalOptions="Center"/>
+                <Label Text="Loading..." x:Name="L_ActivePrinter" FontFamily="FontRegular" FontSize="Caption" VerticalOptions="Center"/>
             </StackLayout>
 
             <Image Source="forward.png" HeightRequest="32" Grid.Column="1" Opacity="0.6">

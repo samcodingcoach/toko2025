@@ -224,7 +224,50 @@ public partial class Settings : ContentPage
                 T_Hp.Text = hp;
             }
 
+            // Load dan tampilkan informasi printer aktif
+            LoadActivePrinterInfo();
+
             System.Diagnostics.Debug.WriteLine($"Logged in user: {nama_lengkap} ({username}) - Session ID: {id_sesi}");
+        }
+    }
+
+    private void LoadActivePrinterInfo()
+    {
+        try
+        {
+            string defaultPrinter = Preferences.Get("default_printer", "");
+            
+            if (string.IsNullOrEmpty(defaultPrinter))
+            {
+                L_ActivePrinter.Text = "No printer configured";
+                return;
+            }
+            
+            // Jika format "NamaPrinter|MacAddress"
+            if (defaultPrinter.Contains("|"))
+            {
+                string[] parts = defaultPrinter.Split('|');
+                if (parts.Length == 2)
+                {
+                    string printerName = parts[0];
+                    string macAddress = parts[1];
+                    L_ActivePrinter.Text = $"{printerName}\nMAC: {macAddress}";
+                }
+                else
+                {
+                    L_ActivePrinter.Text = defaultPrinter;
+                }
+            }
+            else
+            {
+                // Format lama, hanya nama printer
+                L_ActivePrinter.Text = defaultPrinter;
+            }
+        }
+        catch (Exception ex)
+        {
+            L_ActivePrinter.Text = "Error loading printer info";
+            System.Diagnostics.Debug.WriteLine($"Error loading printer info: {ex.Message}");
         }
     }
 

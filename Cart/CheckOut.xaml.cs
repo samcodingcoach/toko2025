@@ -495,67 +495,53 @@ public partial class CheckOut : BottomSheet, INotifyPropertyChanged
                 // Close bottom sheet first
                 await this.DismissAsync();
                 
-                // Navigate back to ListProduct with delay to ensure bottom sheet is closed
+                // Navigate to PreviewStruk with delay to ensure bottom sheet is closed
                 await Task.Delay(500);
                 
-                // Navigate to ListProduct tab - use proper tab navigation
+                // Navigate to PreviewStruk to show receipt
                 try
                 {
-                    // NEW: Check if we need to reset History tab after debt payment
-                    bool resetHistoryTab = Preferences.Get("reset_history_tab_after_debt", false);
+                    System.Diagnostics.Debug.WriteLine($"=== NAVIGATING TO PREVIEW STRUK ===");
+                    System.Diagnostics.Debug.WriteLine($"Penjualan ID for receipt: {penjualanId}");
                     
-                    if (resetHistoryTab)
-                    {
-                        System.Diagnostics.Debug.WriteLine("=== RESETTING HISTORY TAB AFTER DEBT PAYMENT ===");
-                        Preferences.Remove("reset_history_tab_after_debt");
-                        
-                        // Reset History tab to List_History first
-                        if (Application.Current?.MainPage is TabPage tabPage)
-                        {
-                            await tabPage.GoToAsync("//ListHistory");
-                            System.Diagnostics.Debug.WriteLine("History tab reset to ListHistory after debt payment");
-                            await Task.Delay(200); // Small delay
-                        }
-                        else if (Shell.Current != null)
-                        {
-                            await Shell.Current.GoToAsync("//ListHistory");
-                            System.Diagnostics.Debug.WriteLine("History tab reset via Shell after debt payment");
-                            await Task.Delay(200);
-                        }
-                    }
+                    // Create PreviewStruk page with penjualan ID
+                    var previewStrukPage = new Cart.PreviewStruk(penjualanId);
                     
-                    // Try multiple navigation approaches
-                    if (Application.Current?.MainPage is TabPage tabPage2)
+                    // Navigate to PreviewStruk page
+                    if (Application.Current?.MainPage is TabPage tabPage)
                     {
-                        // Direct tab navigation if we're in TabPage context
-                        await tabPage2.GoToAsync("//ListProduct");
-                        System.Diagnostics.Debug.WriteLine("Navigation via TabPage successful");
+                        await tabPage.Navigation.PushAsync(previewStrukPage);
+                        System.Diagnostics.Debug.WriteLine("Navigation to PreviewStruk via TabPage successful");
                     }
-                    else if (Shell.Current != null)
+                    else if (Application.Current?.MainPage?.Navigation != null)
                     {
-                        // Fallback to Shell navigation
-                        await Shell.Current.GoToAsync("//ListProduct");
-                        System.Diagnostics.Debug.WriteLine("Navigation via Shell.Current successful");
+                        await Application.Current.MainPage.Navigation.PushAsync(previewStrukPage);
+                        System.Diagnostics.Debug.WriteLine("Navigation to PreviewStruk via MainPage successful");
                     }
                     else
                     {
-                        // Last resort - navigate to TabPage itself
-                        Application.Current.MainPage = new TabPage();
-                        System.Diagnostics.Debug.WriteLine("Navigation via MainPage replacement successful");
+                        System.Diagnostics.Debug.WriteLine("No navigation context available");
+                        // Fallback: Set PreviewStruk as MainPage temporarily
+                        Application.Current.MainPage = previewStrukPage;
                     }
                 }
                 catch (Exception navEx)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Navigation error: {navEx.Message}");
+                    System.Diagnostics.Debug.WriteLine($"Navigation to PreviewStruk error: {navEx.Message}");
                     
-                    // Ultimate fallback - set MainPage to TabPage directly
+                    // Fallback navigation to ListProduct if PreviewStruk fails
                     try
                     {
-                        await MainThread.InvokeOnMainThreadAsync(() =>
+                        if (Application.Current?.MainPage is TabPage tabPage2)
+                        {
+                            await tabPage2.GoToAsync("//ListProduct");
+                            System.Diagnostics.Debug.WriteLine("Fallback navigation to ListProduct successful");
+                        }
+                        else
                         {
                             Application.Current.MainPage = new TabPage();
-                        });
-                        System.Diagnostics.Debug.WriteLine("Fallback navigation successful");
+                            System.Diagnostics.Debug.WriteLine("Fallback to TabPage successful");
+                        }
                     }
                     catch (Exception fallbackEx)
                     {

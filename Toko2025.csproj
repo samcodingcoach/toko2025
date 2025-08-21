@@ -85,6 +85,9 @@
 	  <MauiXaml Update="Cart\Payment.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Cart\PreviewStruk.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Home\Categories_BottomSheet.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -119,7 +122,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DotNetMeteor.HotReload.Plugin" Version="3.*"/>
+		<PackageReference Include="DotNetMeteor.HotReload.Plugin" Version="3.*" />
 	</ItemGroup>
 
 </Project>

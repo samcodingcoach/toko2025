@@ -72,7 +72,8 @@ public partial class Bluetooth : ContentPage, INotifyPropertyChanged
 #endif
 
         // Load saved printer
-        _savedPrinterName = Preferences.Get("default_printer", string.Empty);
+        string defaultPrinter = Preferences.Get("default_printer", string.Empty);
+        _savedPrinterName = defaultPrinter.Contains("|") ? defaultPrinter.Split('|')[0] : defaultPrinter;
         System.Diagnostics.Debug.WriteLine($"Saved printer name: {_savedPrinterName}");
         
         // Setup event handlers
@@ -296,13 +297,27 @@ public partial class Bluetooth : ContentPage, INotifyPropertyChanged
 
             try
             {
-                // Test print dengan format struk ESC/POS
-                await PrintReceiptAsync(SelectedDevice.Name);
-                // Save as default printer
-                Preferences.Set("default_printer", SelectedDevice.Name);
+                // Save as default printer first with format "Name|MacAddress"
+                string printerInfo = $"{SelectedDevice.Name}|{SelectedDevice.MacAddress.Replace("MAC Address: ", "")}";
+                Preferences.Set("default_printer", printerInfo);
                 _savedPrinterName = SelectedDevice.Name;
-                System.Diagnostics.Debug.WriteLine($"Printer saved as default: {SelectedDevice.Name}");
+                System.Diagnostics.Debug.WriteLine($"Printer saved as default: {printerInfo}");
                 await ShowToast($"Printer '{SelectedDevice.Name}' saved as default");
+                
+                // Ask user if they want to do a print test
+                bool wantPrintTest = await DisplayAlert(
+                    "Print Test", 
+                    "Configuration saved successfully! Do you want to perform a print test?", 
+                    "Yes", 
+                    "No"
+                );
+                
+                if (wantPrintTest)
+                {
+                    // Perform simple print test
+                    await PrintTestAsync(SelectedDevice.Name);
+                }
+                
                 // Navigate back
                 await Navigation.PopAsync();
             }
@@ -325,6 +340,37 @@ public partial class Bluetooth : ContentPage, INotifyPropertyChanged
         {
             System.Diagnostics.Debug.WriteLine($"SaveButton_Clicked error: {ex.Message}");
             await ShowToast($"Error saving configuration: {ex.Message}");
+        }
+    }
+
+    // Simple print test method
+    private async Task PrintTestAsync(string printerName)
+    {
+        try
+        {
+            var sb = new System.Text.StringBuilder();
+            
+            // Simple test print format
+            sb.Append(
+                "\x1B\x61\x01" +          // Center align
+                "\x1B\x21\x08" +          // Font A Bold
+                "PRINT SUCCESS\r\n" +
+                "\x1B\x21\x00" +          // Reset font normal
+                "\x1B\x61\x01" +          // Center align
+                $"{DateTime.Now:dd/MM/yyyy HH:mm:ss}\r\n\r\n" +
+                "\x1B\x61\x00" +          // Left align
+                "\r\n\r\n\r\n" +         // Feed lines
+                "\x1D\x56\x00"           // Auto cut
+            );
+            
+            await _bluetoothService.Print(printerName, sb.ToString());
+            await ShowToast("Print test successful!");
+            System.Diagnostics.Debug.WriteLine("Print test completed successfully");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Print test failed: {ex.Message}");
+            await ShowToast($"Print test failed: {ex.Message}");
         }
     }
 

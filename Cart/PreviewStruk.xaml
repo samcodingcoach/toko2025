@@ -2,11 +2,250 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Toko2025.Cart.PreviewStruk"
-             Title="PreviewStruk">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             NavigationPage.HasBackButton="False" NavigationPage.HasNavigationBar="False"
+             BackgroundColor="White">
+    
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="10">
+            
+            <!-- HEADER TOKO -->
+            <StackLayout HorizontalOptions="Center" Spacing="5">
+                <Label x:Name="L_NamaUsaha" 
+                       Text="Warung Bugis"
+                       FontSize="18" 
+                       FontAttributes="Bold"
+                       HorizontalTextAlignment="Center"
+                       TextColor="Black" />
+                       
+                <Label x:Name="L_Alamat" 
+                       Text="Jalan. Merdeka Utara No.40 Samarinda"
+                       FontSize="12" 
+                       HorizontalTextAlignment="Center"
+                       TextColor="Black" />
+                       
+                <Label x:Name="L_WhatsApp" 
+                       Text="85212351111"
+                       FontSize="12" 
+                       HorizontalTextAlignment="Center"
+                       TextColor="Black" />
+            </StackLayout>
+            
+            <!-- SEPARATOR LINE -->
+            <BoxView HeightRequest="1" BackgroundColor="Black" Margin="0,10" />
+            
+            <!-- NOMOR FAKTUR DAN TANGGAL -->
+            <StackLayout Spacing="5">
+                <Label x:Name="L_NoFaktur" 
+                       Text="No: FK001/ 21-08-2025 20:03"
+                       FontSize="12" 
+                       TextColor="Black" />
+                       
+                <Label x:Name="L_Member" 
+                       Text="Member: General"
+                       FontSize="12" 
+                       TextColor="Black" />
+            </StackLayout>
+            
+            <!-- SEPARATOR LINE -->
+            <BoxView HeightRequest="1" BackgroundColor="Black" Margin="0,5" />
+            
+            <!-- RINCIAN PRODUK -->
+            <Label Text="Rincian" 
+                   FontSize="14" 
+                   FontAttributes="Bold"
+                   TextColor="Black" />
+            
+            <!-- ITEMS LIST -->
+            <CollectionView x:Name="CV_Items" ItemsSource="{Binding Items}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="0,5" ColumnDefinitions="*,Auto">
+                            <StackLayout Grid.Column="0" Spacing="2">
+                                <Label Text="{Binding NamaBarang}" 
+                                       FontSize="12" 
+                                       TextColor="Black" />
+                                <Label FontSize="11" TextColor="Gray">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding JumlahJual}" />
+                                            <Span Text=" x " />
+                                            <Span Text="{Binding HargaJual, StringFormat='{0:N0}'}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                            </StackLayout>
+                            <Label Grid.Column="1" 
+                                   Text="{Binding Subtotal, StringFormat='{0:N0}'}"
+                                   FontSize="12" 
+                                   TextColor="Black"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            
+            <!-- SEPARATOR LINE -->
+            <BoxView HeightRequest="1" BackgroundColor="Black" Margin="0,10" />
+            
+            <!-- SUBTOTAL SECTION -->
+            <StackLayout Spacing="3">
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" 
+                           Text="Subtotal" 
+                           FontSize="12" 
+                           TextColor="Black" />
+                </Grid>
+                
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" 
+                           Text="Produk" 
+                           FontSize="12" 
+                           TextColor="Black" />
+                    <Label Grid.Column="1" 
+                           x:Name="L_SubtotalProduk"
+                           Text="24.000" 
+                           FontSize="12" 
+                           TextColor="Black" />
+                </Grid>
+                       
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" 
+                           Text="Biaya Lain" 
+                           FontSize="12" 
+                           TextColor="Black" />
+                    <Label Grid.Column="1" 
+                           x:Name="L_BiayaLain"
+                           Text="0" 
+                           FontSize="12" 
+                           TextColor="Black" />
+                </Grid>
+                       
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" 
+                           Text="Potongan" 
+                           FontSize="12" 
+                           TextColor="Black" />
+                    <Label Grid.Column="1" 
+                           x:Name="L_Potongan"
+                           Text="0" 
+                           FontSize="12" 
+                           TextColor="Black" />
+                </Grid>
+            </StackLayout>
+            
+            <!-- SEPARATOR LINE -->
+            <BoxView HeightRequest="1" BackgroundColor="Black" Margin="0,5" />
+            
+            <!-- TOTAL HARGA -->
+            <Grid ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0" 
+                       Text="Total Harga" 
+                       FontSize="16" 
+                       FontAttributes="Bold"
+                       TextColor="Black" />
+                <Label Grid.Column="1" 
+                       x:Name="L_TotalHarga"
+                       Text="24.000" 
+                       FontSize="16" 
+                       FontAttributes="Bold"
+                       TextColor="Black" />
+            </Grid>
+            
+            <!-- SEPARATOR LINE -->
+            <BoxView HeightRequest="1" BackgroundColor="Black" Margin="0,10" />
+            
+            <!-- PAYMENT DETAILS -->
+            <StackLayout Spacing="5">
+                <Label Text="Tunai" 
+                       FontSize="14" 
+                       FontAttributes="Bold"
+                       TextColor="Black" />
+                       
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" 
+                           Text="Cash" 
+                           FontSize="12" 
+                           TextColor="Black" />
+                    <Label Grid.Column="1" 
+                           x:Name="L_Cash"
+                           Text="30.000" 
+                           FontSize="12" 
+                           TextColor="Black" />
+                </Grid>
+                
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" 
+                           Text="Kembalian" 
+                           FontSize="12" 
+                           TextColor="Black" />
+                    <Label Grid.Column="1" 
+                           x:Name="L_Kembalian"
+                           Text="6.000" 
+                           FontSize="12" 
+                           TextColor="Black" />
+                </Grid>
+            </StackLayout>
+            
+            <!-- SEPARATOR LINE -->
+            <BoxView HeightRequest="1" BackgroundColor="Black" Margin="0,10" />
+            
+            <!-- FOOTER INFO -->
+            <StackLayout Spacing="5">
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" 
+                           Text="Hutang" 
+                           FontSize="12" 
+                           TextColor="Black" />
+                    <Label Grid.Column="1" 
+                           x:Name="L_Hutang"
+                           Text="LUNAS" 
+                           FontSize="12" 
+                           TextColor="Black" />
+                </Grid>
+                
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" 
+                           Text="Kasir" 
+                           FontSize="12" 
+                           TextColor="Black" />
+                    <Label Grid.Column="1" 
+                           x:Name="L_Kasir"
+                           Text="KASIR 1" 
+                           FontSize="12" 
+                           TextColor="Black" />
+                </Grid>
+            </StackLayout>
+            
+            <!-- SEPARATOR LINE -->
+            <BoxView HeightRequest="1" BackgroundColor="Black" Margin="0,10" />
+            
+            <!-- THANK YOU MESSAGE -->
+            <Label Text="Terimakasih atas Pembayaran Anda" 
+                   FontSize="12" 
+                   HorizontalTextAlignment="Center"
+                   TextColor="Black" 
+                   Margin="0,10" />
+            
+            <!-- PRINT BUTTON -->
+            <Button x:Name="B_Print"
+                    Text="Print Struk"
+                    BackgroundColor="#007ACC"
+                    TextColor="White"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    CornerRadius="8"
+                    HeightRequest="50"
+                    Margin="20,20,20,10"
+                    Clicked="B_Print_Clicked">
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="MaterialIcons"
+                                   Glyph="&#xE8AD;"
+                                   Color="White"
+                                   Size="20" />
+                </Button.ImageSource>
+            </Button>
+                   
+        </StackLayout>
+    </ScrollView>
+    
 </ContentPage>
