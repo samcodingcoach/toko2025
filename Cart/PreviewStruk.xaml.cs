@@ -72,7 +72,7 @@ public partial class PreviewStruk : ContentPage, INotifyPropertyChanged
     {
         try
         {
-            string apiUrl = $"http://{App.IP}:3000/api/struk/penjualan/{penjualanId}";
+            string apiUrl = $"{App.IP}/api/struk/penjualan/{penjualanId}";
             
             System.Diagnostics.Debug.WriteLine($"=== LOADING STRUK DATA ===");
             System.Diagnostics.Debug.WriteLine($"API URL: {apiUrl}");

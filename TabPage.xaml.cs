@@ -76,7 +76,7 @@ public partial class TabPage : Shell
 				return false;
 
 			// Check if cart has items by calling API
-			string apiUrl = $"http://{App.IP}:3000/api/penjualan/cart/{penjualanId}";
+			string apiUrl = $"{App.IP}/api/penjualan/cart/{penjualanId}";
 			var response = await App.SharedHttpClient.GetAsync(apiUrl);
 			
 			if (response.IsSuccessStatusCode)
@@ -116,7 +116,7 @@ public partial class TabPage : Shell
 				if (penjualanId > 0)
 				{
 					// Call DELETE API to clear cart
-					string apiUrl = $"http://{App.IP}:3000/api/penjualan/{penjualanId}";
+					string apiUrl = $"{App.IP}/api/penjualan/{penjualanId}";
 					await App.SharedHttpClient.DeleteAsync(apiUrl);
 					
 					System.Diagnostics.Debug.WriteLine($"Cart cleared on exit for user {id_user}");

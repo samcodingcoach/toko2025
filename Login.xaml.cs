@@ -11,7 +11,7 @@ namespace Toko2025;
 public partial class Login : ContentPage
 {
     private bool _isPasswordVisible = false;
-    string apiUrl = $"http://{App.IP}:3000/api/sesi_kasir/login";
+    string apiUrl = $"{App.IP}/api/sesi_kasir/login";
     string pesan=string.Empty;
     public Login()
     {
@@ -88,7 +88,7 @@ public partial class Login : ContentPage
     {
         try
         {
-            string profileApiUrl = $"http://{App.IP}:3000/api/profil-usaha";
+            string profileApiUrl = $"{App.IP}/api/profil-usaha";
             
             using (var httpClient = new HttpClient())
             {

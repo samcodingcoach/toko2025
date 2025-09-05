@@ -220,7 +220,7 @@ public partial class DetailList : ContentPage, INotifyPropertyChanged
     {
         try
         {
-            string apiUrl = $"http://{App.IP}:3000/api/history/cart/{faktur}";
+            string apiUrl = $"{App.IP}/api/history/cart/{faktur}";
             System.Diagnostics.Debug.WriteLine($"Calling Cart Detail API: {apiUrl}");
 
             var response = await App.SharedHttpClient.GetAsync(apiUrl);

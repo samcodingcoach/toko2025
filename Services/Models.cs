@@ -1,4 +1,4 @@
-﻿﻿﻿using SkiaSharp;
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -302,7 +302,7 @@ namespace Toko2025.Services
         public string FormattedPrice => $"Rp {harga_jual:N0}";
         public string FormattedMemberPrice => $"Rp {harga_jual_member:N0}";
         public string FormattedStock => $"{stok_aktif}";
-        public string ImageUrl => !string.IsNullOrEmpty(gambar1) ? $"http://{App.IP}:3000/images/{gambar1}" : string.Empty;
+        public string ImageUrl => !string.IsNullOrEmpty(gambar1) ? $"{App.IP}/images/{gambar1}" : string.Empty;
     }
 
     // Models untuk Penjualan (Cart/Sales) - DIPERBAIKI berdasarkan backend
@@ -407,7 +407,7 @@ namespace Toko2025.Services
         // Helper properties untuk UI
         public string FormattedPrice => $"Rp {harga_jual:N0}";
         public string FormattedSubtotal => $"Rp {subtotal:N0}";
-        public string ImageUrl => !string.IsNullOrEmpty(gambar1) ? $"http://{App.IP}:3000/images/{gambar1}" : string.Empty;
+        public string ImageUrl => !string.IsNullOrEmpty(gambar1) ? $"{App.IP}/images/{gambar1}" : string.Empty;
         public int QuantityInt => (int)jumlah_jual;
     }
 
@@ -651,7 +651,7 @@ namespace Toko2025.Services
         public string DiskonDisplay => diskon > 0 ? $"Discount: {FormattedDiskon}" : "";
         
         // NEW: Add ImageUrl helper property
-        public string ImageUrl => !string.IsNullOrEmpty(gambar1) ? $"http://{App.IP}:3000/images/{gambar1}" : string.Empty;
+        public string ImageUrl => !string.IsNullOrEmpty(gambar1) ? $"{App.IP}/images/{gambar1}" : string.Empty;
         
         // Property untuk alternating background color
         public Color RowBackgroundColor => RowIndex % 2 == 0 ? Color.FromArgb("#f6f6f6") : Colors.White;
@@ -791,7 +791,7 @@ namespace Toko2025.Services
         public string tgl_exp { get; set; } = string.Empty;
         
         // Helper property for image URL
-        public string ImageUrl => !string.IsNullOrEmpty(foto_usaha) ? $"http://{App.IP}:3000{foto_usaha}" : string.Empty;
+        public string ImageUrl => !string.IsNullOrEmpty(foto_usaha) ? $"{App.IP}{foto_usaha}" : string.Empty;
     }
 
     

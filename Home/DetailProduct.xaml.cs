@@ -240,7 +240,7 @@ public partial class DetailProduct : ContentPage, INotifyPropertyChanged
     {
         try
         {
-            string imageUrl = $"http://{App.IP}:3000/images/{imageName}";
+            string imageUrl = $"{App.IP}/images/{imageName}";
             System.Diagnostics.Debug.WriteLine($"Loading image with cache: {imageUrl}");
 
             await MainThread.InvokeOnMainThreadAsync(() =>
@@ -313,7 +313,7 @@ public partial class DetailProduct : ContentPage, INotifyPropertyChanged
     {
         try
         {
-            string apiUrl = $"http://{App.IP}:3000/api/barang?id_barang={productId}";
+            string apiUrl = $"{App.IP}/api/barang?id_barang={productId}";
             System.Diagnostics.Debug.WriteLine($"Calling API: {apiUrl}");
 
             // Gunakan SharedHttpClient
@@ -565,10 +565,10 @@ public partial class DetailProduct : ContentPage, INotifyPropertyChanged
             E_Amount.Text = "0";
         }
 
-        // Hitung subtotal: amount × harga_jual (regular price)
+        // Hitung subtotal: amount ï¿½ harga_jual (regular price)
         long subtotalRegular = (long)amount * _currentProduct.harga_jual;
         
-        // Hitung subtotal member: amount × harga_jual_member
+        // Hitung subtotal member: amount ï¿½ harga_jual_member
         long subtotalMember = (long)amount * _currentProduct.harga_jual_member;
         
         // Update subtotal dengan format currency (selalu tampilkan regular price)
@@ -577,8 +577,8 @@ public partial class DetailProduct : ContentPage, INotifyPropertyChanged
         // Hitung penghematan jika jadi member
         CalculateAndDisplayMemberSavings(subtotalRegular, subtotalMember);
         
-        System.Diagnostics.Debug.WriteLine($"Calculated subtotal: {amount} × {_currentProduct.harga_jual:N0} = {subtotalRegular:N0}");
-        System.Diagnostics.Debug.WriteLine($"Member subtotal: {amount} × {_currentProduct.harga_jual_member:N0} = {subtotalMember:N0}");
+        System.Diagnostics.Debug.WriteLine($"Calculated subtotal: {amount} ï¿½ {_currentProduct.harga_jual:N0} = {subtotalRegular:N0}");
+        System.Diagnostics.Debug.WriteLine($"Member subtotal: {amount} ï¿½ {_currentProduct.harga_jual_member:N0} = {subtotalMember:N0}");
         System.Diagnostics.Debug.WriteLine($"Available stock: {_currentProduct.stok_aktif}");
     }
 
@@ -865,7 +865,7 @@ public partial class DetailProduct : ContentPage, INotifyPropertyChanged
     {
         try
         {
-            string apiUrl = $"http://{App.IP}:3000/api/penjualan/cart/{penjualanId}";
+            string apiUrl = $"{App.IP}/api/penjualan/cart/{penjualanId}";
             System.Diagnostics.Debug.WriteLine($"=== VALIDATING PENJUALAN ID ===");
             System.Diagnostics.Debug.WriteLine($"URL: {apiUrl}");
 
@@ -980,7 +980,7 @@ public partial class DetailProduct : ContentPage, INotifyPropertyChanged
     {
         try
         {
-            string apiUrl = $"http://{App.IP}:3000/api/penjualan/last-faktur";
+            string apiUrl = $"{App.IP}/api/penjualan/last-faktur";
             System.Diagnostics.Debug.WriteLine($"Getting last faktur from: {apiUrl}");
 
             // Send GET request
@@ -1011,11 +1011,11 @@ public partial class DetailProduct : ContentPage, INotifyPropertyChanged
     {
         try
         {
-            string apiUrl = $"http://{App.IP}:3000/api/penjualan";
+            string apiUrl = $"{App.IP}/api/penjualan";
             System.Diagnostics.Debug.WriteLine($"=== CREATE PENJUALAN DEBUG ===");
             System.Diagnostics.Debug.WriteLine($"URL: {apiUrl}");
             System.Diagnostics.Debug.WriteLine($"User: {id_user}, Faktur: '{faktur}'");
-            System.Diagnostics.Debug.WriteLine($"App.IP: {App.IP}");
+            System.Diagnostics.Debug.WriteLine($"User: {id_user}, Faktur: '{faktur}'");
 
             // Validasi input sebelum kirim
             if (string.IsNullOrEmpty(faktur))
@@ -1158,7 +1158,7 @@ public partial class DetailProduct : ContentPage, INotifyPropertyChanged
     {
         try
         {
-            string apiUrl = $"http://{App.IP}:3000/api/penjualan/detail";
+            string apiUrl = $"{App.IP}/api/penjualan/detail";
             System.Diagnostics.Debug.WriteLine($"=== ADD ITEM TO CART ===");
             System.Diagnostics.Debug.WriteLine($"URL: {apiUrl}");
             System.Diagnostics.Debug.WriteLine($"Penjualan ID: {id_penjualan}, Barang ID: {id_barang}, Jumlah: {jumlah_jual}, Harga: {harga_jual}");
@@ -1255,7 +1255,7 @@ public partial class DetailProduct : ContentPage, INotifyPropertyChanged
     {
         try
         {
-            string apiUrl = $"http://{App.IP}:3000/api/barang/sekategori?id_kategori={idKategori}&id_barang={idBarang}";
+            string apiUrl = $"{App.IP}/api/barang/sekategori?id_kategori={idKategori}&id_barang={idBarang}";
             System.Diagnostics.Debug.WriteLine($"Calling Similar Products API: {apiUrl}");
 
             var response = await App.SharedHttpClient.GetAsync(apiUrl);

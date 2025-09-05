@@ -165,7 +165,7 @@ public partial class Settings : ContentPage
             System.Diagnostics.Debug.WriteLine($"Date: {tanggal}");
             
             // Buat URL API
-            string apiUrl = $"http://{App.IP}:3000/api/sesi_kasir/closing?id_user={id_user}&tanggal={tanggal}";
+            string apiUrl = $"{App.IP}/api/sesi_kasir/closing?id_user={id_user}&tanggal={tanggal}";
             System.Diagnostics.Debug.WriteLine($"API URL: {apiUrl}");
 
             // Kirim GET request menggunakan SharedHttpClient
@@ -337,7 +337,7 @@ public partial class Settings : ContentPage
                 return false;
 
             // Check if cart has items by calling API
-            string apiUrl = $"http://{App.IP}:3000/api/penjualan/cart/{penjualanId}";
+            string apiUrl = $"{App.IP}/api/penjualan/cart/{penjualanId}";
             var response = await App.SharedHttpClient.GetAsync(apiUrl);
             
             if (response.IsSuccessStatusCode)
@@ -377,7 +377,7 @@ public partial class Settings : ContentPage
                 if (penjualanId > 0)
                 {
                     // Call DELETE API to clear cart
-                    string apiUrl = $"http://{App.IP}:3000/api/penjualan/{penjualanId}";
+                    string apiUrl = $"{App.IP}/api/penjualan/{penjualanId}";
                     await App.SharedHttpClient.DeleteAsync(apiUrl);
                     
                     System.Diagnostics.Debug.WriteLine($"Cart cleared before logout for user {id_user}");
@@ -497,7 +497,7 @@ public partial class Settings : ContentPage
                 httpClient.Timeout = TimeSpan.FromSeconds(10);
 
                 // Buat URL API
-                string apiUrl = $"http://{App.IP}:3000/api/sesi_kasir/off/{idSesi}";
+                string apiUrl = $"{App.IP}/api/sesi_kasir/off/{idSesi}";
 
                 // Kirim POST request (tidak perlu body data)
                 var response = await httpClient.PostAsync(apiUrl, null);
@@ -729,7 +729,7 @@ public partial class Settings : ContentPage
                 httpClient.Timeout = TimeSpan.FromSeconds(30);
 
                 // Buat URL API
-                string apiUrl = $"http://{App.IP}:3000/api/users/update_users";
+                string apiUrl = $"{App.IP}/api/users/update_users";
 
                 // Ambil data user yang login
                 var (id_user, username, nama_lengkap, id_sesi, email, hp) = Login.GetLoggedInUser();

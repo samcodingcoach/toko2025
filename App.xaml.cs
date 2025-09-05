@@ -1,4 +1,4 @@
-﻿using System.Net;
+﻿﻿﻿using System.Net;
 using System.Net.NetworkInformation;
 using Toko2025.Services;
 
@@ -7,7 +7,7 @@ namespace Toko2025
     public partial class App : Application
     { 
         // Default IP Address
-        public static string IP { get; set; } = "192.168.77.8";
+        public static string IP { get; set; } = "http://192.168.77.8:3000";
         
         // Local Database instance
         public static LocalDatabase Database { get; private set; }
@@ -37,7 +37,7 @@ namespace Toko2025
         {
             try
             {
-                string testUrl = $"http://{IP}:3000/api/kategori";
+                string testUrl = $"{IP}/api/kategori";
                 System.Diagnostics.Debug.WriteLine($"Testing API endpoint: {testUrl}");
                 
                 var response = await SharedHttpClient.GetAsync(testUrl);

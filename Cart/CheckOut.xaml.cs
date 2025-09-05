@@ -1,4 +1,4 @@
-﻿using The49.Maui.BottomSheet;
+﻿﻿﻿using The49.Maui.BottomSheet;
 using System.Text;
 using Newtonsoft.Json;
 using System.ComponentModel;
@@ -195,7 +195,7 @@ public partial class CheckOut : BottomSheet, INotifyPropertyChanged
     {
         try
         {
-            string apiUrl = $"http://{App.IP}:3000/api/penjualan/cart/{penjualanId}";
+            string apiUrl = $"{App.IP}/api/penjualan/cart/{penjualanId}";
             var response = await App.SharedHttpClient.GetAsync(apiUrl);
             var jsonContent = await response.Content.ReadAsStringAsync();
 
@@ -612,7 +612,7 @@ public partial class CheckOut : BottomSheet, INotifyPropertyChanged
     {
         try
         {
-            string apiUrl = $"http://{App.IP}:3000/api/penjualan/simpan_checkout";
+            string apiUrl = $"{App.IP}/api/penjualan/simpan_checkout";
             
             System.Diagnostics.Debug.WriteLine($"=== SUBMIT CHECKOUT API ===");
             System.Diagnostics.Debug.WriteLine($"URL: {apiUrl}");
@@ -677,7 +677,7 @@ public partial class CheckOut : BottomSheet, INotifyPropertyChanged
     {
         try
         {
-            string apiUrl = $"http://{App.IP}:3000/api/pembayaran/create-qris";
+            string apiUrl = $"{App.IP}/api/pembayaran/create-qris";
             
             System.Diagnostics.Debug.WriteLine($"=== CREATE QRIS API ===");
             System.Diagnostics.Debug.WriteLine($"URL: {apiUrl}");
@@ -1082,7 +1082,7 @@ public partial class CheckOut : BottomSheet, INotifyPropertyChanged
         try
         {
             // FIXED: Use correct endpoint with order_id instead of id_penjualan
-            string apiUrl = $"http://{App.IP}:3000/api/pembayaran/status/{_currentOrderId}";
+            string apiUrl = $"{App.IP}/api/pembayaran/status/{_currentOrderId}";
             
             System.Diagnostics.Debug.WriteLine($"=== CHECKING QRIS STATUS FROM MIDTRANS ===");
             System.Diagnostics.Debug.WriteLine($"API URL: {apiUrl}");
@@ -2046,7 +2046,7 @@ public partial class CheckOut : BottomSheet, INotifyPropertyChanged
     {
         try
         {
-            string apiUrl = $"http://{App.IP}:3000/api/penjualan/bayar_hutang";
+            string apiUrl = $"{App.IP}/api/penjualan/bayar_hutang";
             
             System.Diagnostics.Debug.WriteLine($"=== BAYAR HUTANG API ===");
             System.Diagnostics.Debug.WriteLine($"URL: {apiUrl}");
@@ -2095,7 +2095,7 @@ public partial class CheckOut : BottomSheet, INotifyPropertyChanged
     {
         try
         {
-            string apiUrl = $"http://{App.IP}:3000/api/pembayaran/transfer_bank";
+            string apiUrl = $"{App.IP}/api/pembayaran/transfer_bank";
             
             System.Diagnostics.Debug.WriteLine($"=== SUBMIT TRANSFER BANK API ===");
             System.Diagnostics.Debug.WriteLine($"URL: {apiUrl}");

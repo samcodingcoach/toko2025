@@ -245,7 +245,7 @@ public partial class List_Cart : ContentPage, INotifyPropertyChanged
     {
         try
         {
-            string apiUrl = $"http://{App.IP}:3000/api/penjualan/cart/{penjualanId}";
+            string apiUrl = $"{App.IP}/api/penjualan/cart/{penjualanId}";
             var response = await App.SharedHttpClient.GetAsync(apiUrl);
             var jsonContent = await response.Content.ReadAsStringAsync();
 
@@ -321,7 +321,7 @@ public partial class List_Cart : ContentPage, INotifyPropertyChanged
             System.Diagnostics.Debug.WriteLine($"id_penjualan: {cartItem.id_penjualan}");
             System.Diagnostics.Debug.WriteLine($"id_barang: {cartItem.id_barang}");
 
-            string apiUrl = $"http://{App.IP}:3000/api/penjualan/detail";
+            string apiUrl = $"{App.IP}/api/penjualan/detail";
             
             // Prepare form data sesuai endpoint yang diberikan
             var formParams = new List<KeyValuePair<string, string>>
@@ -444,7 +444,7 @@ public partial class List_Cart : ContentPage, INotifyPropertyChanged
     {
         try
         {
-            string apiUrl = $"http://{App.IP}:3000/api/penjualan/{penjualanId}";
+            string apiUrl = $"{App.IP}/api/penjualan/{penjualanId}";
             var response = await App.SharedHttpClient.DeleteAsync(apiUrl);
             return response.IsSuccessStatusCode;
         }
@@ -580,7 +580,7 @@ public partial class List_Cart : ContentPage, INotifyPropertyChanged
     {
         try
         {
-            string apiUrl = $"http://{App.IP}:3000/api/member/search";
+            string apiUrl = $"{App.IP}/api/member/search";
             
             System.Diagnostics.Debug.WriteLine($"=== MEMBER SEARCH API ===");
             System.Diagnostics.Debug.WriteLine($"URL: {apiUrl}");
@@ -737,7 +737,7 @@ public partial class List_Cart : ContentPage, INotifyPropertyChanged
     {
         try
         {
-            string apiUrl = $"http://{App.IP}:3000/api/penjualan/simpan_hutang";
+            string apiUrl = $"{App.IP}/api/penjualan/simpan_hutang";
             
             System.Diagnostics.Debug.WriteLine($"=== SAVE DEBT API ===");
             System.Diagnostics.Debug.WriteLine($"URL: {apiUrl}");
@@ -890,7 +890,7 @@ public partial class List_Cart : ContentPage, INotifyPropertyChanged
             if (id_user <= 0) return null;
             
             string startDate = DateTime.Now.ToString("yyyy-MM-dd");
-            string apiUrl = $"http://{App.IP}:3000/api/history?start_date={startDate}&id_user={id_user}";
+            string apiUrl = $"{App.IP}/api/history?start_date={startDate}&id_user={id_user}";
             
             System.Diagnostics.Debug.WriteLine($"Getting transaction info from history API: {apiUrl}");
 
@@ -930,7 +930,7 @@ public partial class List_Cart : ContentPage, INotifyPropertyChanged
     {
         try
         {
-            string apiUrl = $"http://{App.IP}:3000/api/history/cart/{faktur}";
+            string apiUrl = $"{App.IP}/api/history/cart/{faktur}";
             System.Diagnostics.Debug.WriteLine($"Calling History Cart API for debt: {apiUrl}");
 
             var response = await App.SharedHttpClient.GetAsync(apiUrl);

@@ -193,7 +193,7 @@ public partial class List_History : ContentPage, INotifyPropertyChanged
     {
         try
         {
-            string apiUrl = $"http://{App.IP}:3000/api/pembayaran";
+            string apiUrl = $"{App.IP}/api/pembayaran";
             System.Diagnostics.Debug.WriteLine($"Calling Payment Methods API: {apiUrl}");
 
             var response = await App.SharedHttpClient.GetAsync(apiUrl);
@@ -547,7 +547,7 @@ public partial class List_History : ContentPage, INotifyPropertyChanged
     {
         try
         {
-            string apiUrl = $"http://{App.IP}:3000/api/history?start_date={startDate}&id_user={idUser}";
+            string apiUrl = $"{App.IP}/api/history?start_date={startDate}&id_user={idUser}";
             System.Diagnostics.Debug.WriteLine($"=== CALLING HISTORY API ===");
             System.Diagnostics.Debug.WriteLine($"URL: {apiUrl}");
             System.Diagnostics.Debug.WriteLine($"Start Date: {startDate}");

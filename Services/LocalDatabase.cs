@@ -90,7 +90,7 @@ namespace Toko2025.Services
                 }
 
                 // Fetch from server
-                var response = await _httpClient.GetAsync($"http://{App.IP}:3000/api/kategori");
+                var response = await _httpClient.GetAsync($"{App.IP}/api/kategori");
                 response.EnsureSuccessStatusCode();
                 
                 var jsonContent = await response.Content.ReadAsStringAsync();
@@ -142,7 +142,7 @@ namespace Toko2025.Services
                     return true;
                 }
 
-                var response = await _httpClient.GetAsync($"http://{App.IP}:3000/api/merk");
+                var response = await _httpClient.GetAsync($"{App.IP}/api/merk");
                 response.EnsureSuccessStatusCode();
                 
                 var jsonContent = await response.Content.ReadAsStringAsync();
@@ -195,7 +195,7 @@ namespace Toko2025.Services
         {
             try
             {
-                var response = await _httpClient.GetAsync($"http://{App.IP}:3000/api/barang/display");
+                var response = await _httpClient.GetAsync($"{App.IP}/api/barang/display");
                 response.EnsureSuccessStatusCode();
                 
                 var jsonContent = await response.Content.ReadAsStringAsync();
