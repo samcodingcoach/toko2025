@@ -10,15 +10,51 @@
             <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
 
-        <!-- Green gradient header -->
-        <BoxView Grid.Row="0">
-            <BoxView.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="#90A955" Offset="0.0"/>
-                    <GradientStop Color="#4C6637" Offset="1.0"/>
-                </LinearGradientBrush>
-            </BoxView.Background>
-        </BoxView>
+        <!-- Header with store image and overlay text -->
+        <Grid Grid.Row="0">
+            <!-- Store Image Background -->
+            <Image x:Name="StoreImageBackground"
+                   Aspect="AspectFill">
+                <!-- Fallback to gradient if no image -->
+                <Image.Triggers>
+                    <DataTrigger TargetType="Image" Binding="{Binding Source={x:Reference StoreImageBackground}, Path=Source}" Value="{x:Null}">
+                        <Setter Property="IsVisible" Value="False"/>
+                    </DataTrigger>
+                </Image.Triggers>
+            </Image>
+            
+            <!-- Fallback Gradient Background (when no image) -->
+            <BoxView x:Name="FallbackGradient">
+                <BoxView.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#90A955" Offset="0.0"/>
+                        <GradientStop Color="#4C6637" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </BoxView.Background>
+            </BoxView>
+            
+            <!-- Semi-transparent overlay for better text readability -->
+            <BoxView BackgroundColor="Black" Opacity="0.4"/>
+            
+            <!-- Store Information Overlay -->
+            <StackLayout VerticalOptions="Center" 
+                         HorizontalOptions="Center"
+                         Spacing="5">
+                <Label x:Name="StoreNameLabel"
+                       Text="LOADING..." 
+                       FontSize="32" 
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       HorizontalOptions="Center"/>
+                       
+                <Label x:Name="StoreAddressLabel"
+                       Text="Loading address..." 
+                       FontSize="16" 
+                       TextColor="White"
+                       HorizontalOptions="Center"
+                       Opacity="0.9"/>
+            </StackLayout>
+        </Grid>
 
         <!-- Login form -->
         <StackLayout Grid.Row="1" 

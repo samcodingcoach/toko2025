@@ -4,6 +4,8 @@ using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using Newtonsoft.Json;
 using System.Text;
+using Toko2025.Services;
+
 namespace Toko2025;
 
 public partial class Login : ContentPage
@@ -14,12 +16,110 @@ public partial class Login : ContentPage
     public Login()
     {
         InitializeComponent();
+        
+        // Load store profile data when page is initialized
+        LoadStoreProfileAsync();
+    }
+
+    private async void LoadStoreProfileAsync()
+    {
+        try
+        {
+            var storeProfile = await GetStoreProfile();
+            if (storeProfile != null && storeProfile.success)
+            {
+                // Update UI labels with store information
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    StoreNameLabel.Text = !string.IsNullOrEmpty(storeProfile.data.nama_usaha) 
+                        ? storeProfile.data.nama_usaha.ToUpper() 
+                        : "NAMA TOKO";
+                    
+                    StoreAddressLabel.Text = !string.IsNullOrEmpty(storeProfile.data.alamat) 
+                        ? storeProfile.data.alamat 
+                        : "Alamat Toko";
+                    
+                    // Load store image if available
+                    if (!string.IsNullOrEmpty(storeProfile.data.foto_usaha))
+                    {
+                        string imageUrl = storeProfile.data.ImageUrl;
+                        System.Diagnostics.Debug.WriteLine($"Loading store image: {imageUrl}");
+                        
+                        StoreImageBackground.Source = ImageSource.FromUri(new Uri(imageUrl));
+                        FallbackGradient.IsVisible = false; // Hide gradient when image is loaded
+                    }
+                    else
+                    {
+                        // No image available, use gradient background
+                        StoreImageBackground.Source = null;
+                        FallbackGradient.IsVisible = true;
+                    }
+                });
+            }
+            else
+            {
+                // Fallback to default values if API fails
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    StoreNameLabel.Text = "NAMA TOKO";
+                    StoreAddressLabel.Text = "Alamat Toko";
+                    // Use gradient background as fallback
+                    StoreImageBackground.Source = null;
+                    FallbackGradient.IsVisible = true;
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error loading store profile: {ex.Message}");
+            // Use default values on error
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                StoreNameLabel.Text = "NAMA TOKO";
+                StoreAddressLabel.Text = "Alamat Toko";
+                // Use gradient background as fallback on error
+                StoreImageBackground.Source = null;
+                FallbackGradient.IsVisible = true;
+            });
+        }
+    }
+
+    private async Task<ProfileUsahaResponse?> GetStoreProfile()
+    {
+        try
+        {
+            string profileApiUrl = $"http://{App.IP}:3000/api/profil-usaha";
+            
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.Timeout = TimeSpan.FromSeconds(10); // Shorter timeout for profile
+                
+                var response = await httpClient.GetAsync(profileApiUrl);
+                string responseContent = await response.Content.ReadAsStringAsync();
+                
+                System.Diagnostics.Debug.WriteLine($"Store profile API response: {responseContent}");
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    var profileResponse = JsonConvert.DeserializeObject<ProfileUsahaResponse>(responseContent);
+                    return profileResponse;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"Store profile API error: {response.StatusCode}");
+                    return null;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Store profile fetch error: {ex.Message}");
+            return null;
+        }
     }
 
     private async void toast()
     {
-       
-
         CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         ToastDuration duration = ToastDuration.Long;
         double fontSize = 12;

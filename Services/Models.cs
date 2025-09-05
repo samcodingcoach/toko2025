@@ -1,4 +1,4 @@
-﻿using SkiaSharp;
+﻿﻿﻿using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -774,4 +774,25 @@ namespace Toko2025.Services
         public string message { get; set; } = string.Empty;
         public int affectedRows { get; set; }
     }
+
+    // Models untuk Profile Usaha API - NEW
+    public class ProfileUsahaResponse
+    {
+        public bool success { get; set; }
+        public string message { get; set; } = string.Empty;
+        public ProfileUsahaData data { get; set; } = new ProfileUsahaData();
+    }
+
+    public class ProfileUsahaData
+    {
+        public string nama_usaha { get; set; } = string.Empty;
+        public string alamat { get; set; } = string.Empty;
+        public string foto_usaha { get; set; } = string.Empty;
+        public string tgl_exp { get; set; } = string.Empty;
+        
+        // Helper property for image URL
+        public string ImageUrl => !string.IsNullOrEmpty(foto_usaha) ? $"http://{App.IP}:3000{foto_usaha}" : string.Empty;
+    }
+
+    
 }
