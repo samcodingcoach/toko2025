@@ -5,7 +5,7 @@
              NavigationPage.HasNavigationBar="False"
              BackgroundColor="#f6f6f6">
     
-    <Grid RowDefinitions="Auto,Auto,Auto,*">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
         
         <!-- Header -->
         <Grid Grid.Row="0" 
@@ -81,10 +81,25 @@
             </Image>
             
         </Grid>
-        
-        
+
+        <Grid ColumnDefinitions="*,Auto" Grid.Row="3" BackgroundColor="White" Padding="20,10" Margin="0,10,0,0">
+            <StackLayout Grid.Column="0">
+                <Label Text="Server Connection" FontFamily="FontBold" FontSize="Subtitle" VerticalOptions="Center" TextColor="#333333"/>
+                <Label Text="Loading..." x:Name="L_ActiveConnection" FontFamily="FontRegular" FontSize="Caption" VerticalOptions="Center"/>
+            </StackLayout>
+
+            <Image Source="forward.png" HeightRequest="32" Grid.Column="1" Opacity="0.6">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer x:Name="ConnectionSetup" Tapped="ConnectionSetup_Tapped">
+
+                    </TapGestureRecognizer>
+                </Image.GestureRecognizers>
+            </Image>
+        </Grid>
+
+
         <!-- Account Information -->
-        <ScrollView Grid.Row="3" 
+        <ScrollView Grid.Row="4" 
                     BackgroundColor="White"
                     Margin="0,10,0,10">
             <StackLayout Padding="20,20,20,0">

@@ -848,7 +848,6 @@ public partial class Settings : ContentPage
     private async void PrinterSetting_Tapped(object sender, TappedEventArgs e)
     {
 
-
         if (sender is Image image)
         {
             await image.FadeTo(0.3, 100); // Turunkan opacity ke 0.3 dalam 100ms
@@ -857,5 +856,16 @@ public partial class Settings : ContentPage
 
         await Navigation.PushAsync(new Account.Bluetooth());
 
+    }
+
+    private async void ConnectionSetup_Tapped(object sender, TappedEventArgs e)
+    {
+        if (sender is Image image)
+        {
+            await image.FadeTo(0.3, 100); // Turunkan opacity ke 0.3 dalam 100ms
+            await image.FadeTo(1, 200);   // Kembalikan opacity ke 1 dalam 200ms
+        }
+
+        await Navigation.PushAsync(new Connection());
     }
 }
