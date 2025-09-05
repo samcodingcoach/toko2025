@@ -34,26 +34,37 @@
             </BoxView>
             
             <!-- Semi-transparent overlay for better text readability -->
-            <BoxView BackgroundColor="Black" Opacity="0.4"/>
+            <BoxView BackgroundColor="Black" Opacity="0.7"/>
             
             <!-- Store Information Overlay -->
-            <StackLayout VerticalOptions="Center" 
-                         HorizontalOptions="Center"
-                         Spacing="5">
+            <Grid VerticalOptions="Center" 
+                  HorizontalOptions="Fill"
+                  Padding="30,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
                 <Label x:Name="StoreNameLabel"
+                       Grid.Row="0"
                        Text="LOADING..." 
-                       FontSize="32" 
+                       FontSize="Title" 
                        FontAttributes="Bold"
                        TextColor="White"
-                       HorizontalOptions="Center"/>
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"/>
                        
                 <Label x:Name="StoreAddressLabel"
+                       Grid.Row="1"
                        Text="Loading address..." 
-                       FontSize="16" 
+                       FontSize="Caption"
                        TextColor="White"
                        HorizontalOptions="Center"
-                       Opacity="0.9"/>
-            </StackLayout>
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"
+                       Margin="0,5,0,0"/>
+            </Grid>
         </Grid>
 
         <!-- Login form -->
