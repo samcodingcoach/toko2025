@@ -4,6 +4,7 @@ using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using System.Text;
 using Newtonsoft.Json;
+using Toko2025.Services;
 namespace Toko2025.Account;
 
 public partial class Settings : ContentPage
@@ -226,6 +227,9 @@ public partial class Settings : ContentPage
 
             // Load dan tampilkan informasi printer aktif
             LoadActivePrinterInfo();
+            
+            // Load dan tampilkan informasi connection aktif
+            LoadActiveConnectionInfo();
 
             System.Diagnostics.Debug.WriteLine($"Logged in user: {nama_lengkap} ({username}) - Session ID: {id_sesi}");
         }
@@ -268,6 +272,58 @@ public partial class Settings : ContentPage
         {
             L_ActivePrinter.Text = "Error loading printer info";
             System.Diagnostics.Debug.WriteLine($"Error loading printer info: {ex.Message}");
+        }
+    }
+    
+    private async void LoadActiveConnectionInfo()
+    {
+        try
+        {
+            // Get current IP configuration
+            string currentIP = App.IP;
+            string networkType = Preferences.Get("NetworkType", "Unknown");
+            string localIP = Preferences.Get("LocalIP", "");
+            string onlineIP = Preferences.Get("OnlineIP", "");
+            
+            if (string.IsNullOrEmpty(currentIP))
+            {
+                L_ActiveConnection.Text = "No connection configured";
+                return;
+            }
+            
+            // Format connection info based on network type
+            if (networkType == "Local Network" && !string.IsNullOrEmpty(localIP))
+            {
+                L_ActiveConnection.Text = $"[Local]: {localIP}";
+            }
+            else if (networkType == "Online Network" && !string.IsNullOrEmpty(onlineIP))
+            {
+                L_ActiveConnection.Text = $"[Online]: {onlineIP}";
+            }
+            else
+            {
+                // Fallback to showing the current IP without prefix
+                string displayIP = currentIP;
+                
+                // Remove protocol prefix for cleaner display
+                if (displayIP.StartsWith("http://"))
+                {
+                    displayIP = displayIP.Substring(7);
+                }
+                else if (displayIP.StartsWith("https://"))
+                {
+                    displayIP = displayIP.Substring(8);
+                }
+                
+                L_ActiveConnection.Text = $"[Hardcoded]: {displayIP}";
+            }
+            
+            System.Diagnostics.Debug.WriteLine($"Active connection info loaded: {L_ActiveConnection.Text}");
+        }
+        catch (Exception ex)
+        {
+            L_ActiveConnection.Text = "Error loading connection info";
+            System.Diagnostics.Debug.WriteLine($"Error loading connection info: {ex.Message}");
         }
     }
 
@@ -867,5 +923,13 @@ public partial class Settings : ContentPage
         }
 
         await Navigation.PushAsync(new Connection());
+    }
+    
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        
+        // Refresh connection info when page appears (e.g., when returning from Connection page)
+        LoadActiveConnectionInfo();
     }
 }
