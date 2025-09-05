@@ -1,4 +1,4 @@
-﻿﻿﻿using The49.Maui.BottomSheet;
+﻿using The49.Maui.BottomSheet;
 using System.Text;
 using Newtonsoft.Json;
 using System.ComponentModel;
