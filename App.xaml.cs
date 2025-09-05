@@ -207,7 +207,7 @@ namespace Toko2025
             }
             else
             {
-                MainPage = new NavigationPage(new Connection());
+                MainPage = new NavigationPage(new Login());
             }
         }
 
