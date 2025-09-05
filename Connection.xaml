@@ -49,7 +49,7 @@
                 </Border.StrokeShape>
                 <StackLayout Orientation="Horizontal">
 
-                    <Picker Title="Pilih Jaringan"
+                    <Picker Title="Pilih Jaringan" x:Name="Picker_Network"
                             TitleColor="Gray" FontFamily="FontRegular" TextColor="#333333">
                         <Picker.ItemsSource>
                             <x:Array Type="{x:Type x:String}">

@@ -1,4 +1,4 @@
-﻿﻿using SkiaSharp;
+﻿﻿﻿﻿using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -136,7 +136,7 @@ namespace Toko2025.Services
         }
 
         /// <summary>
-        /// Kompres gambar dengan kualitas yang bervariasi hingga ukuran <= 1MB
+        /// Kompres gambar dengan kualitas yang bervariasi hingga ukuran &lt;= 1MB
         /// </summary>
         private static async Task<MemoryStream> CompressWithQualityAsync(SKBitmap bitmap, SKEncodedImageFormat format)
         {

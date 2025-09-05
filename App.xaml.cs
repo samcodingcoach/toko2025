@@ -6,8 +6,8 @@ namespace Toko2025
 {
     public partial class App : Application
     { 
-        // Default IP Address
-        public static string IP { get; set; } = "http://192.168.77.8:3000";
+        // Default IP Address - now loaded from Preferences
+        public static string IP { get; set; } = LoadIPFromPreferences();
         
         // Local Database instance
         public static LocalDatabase Database { get; private set; }
@@ -15,19 +15,126 @@ namespace Toko2025
         // Shared HttpClient untuk performance
         public static HttpClient SharedHttpClient { get; private set; }
         
-        // Ping validation method
+        // Connection monitoring
+        public static bool IsConnected { get; private set; } = true;
+        public static event Action<bool> ConnectionChanged;
+        
+        // Load IP from Preferences
+        private static string LoadIPFromPreferences()
+        {
+            try
+            {
+                string savedIP = Preferences.Get("SelectedIP", "http://192.168.77.8:3000");
+                System.Diagnostics.Debug.WriteLine($"Loaded IP from Preferences: {savedIP}");
+                return savedIP;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error loading IP from Preferences: {ex.Message}");
+                return "http://192.168.77.8:3000"; // Default fallback
+            }
+        }
+        
+        // Update IP configuration
+        public static void UpdateIPConfiguration(string newIP)
+        {
+            IP = newIP;
+            Preferences.Set("SelectedIP", newIP);
+            System.Diagnostics.Debug.WriteLine($"IP configuration updated to: {newIP}");
+            
+            // Re-initialize HttpClient with new IP
+            InitializeHttpClient();
+            
+            // Test new connection
+            Task.Run(async () => await MonitorConnection());
+        }
+        
+        // Monitor connection status
+        public static async Task MonitorConnection()
+        {
+            try
+            {
+                bool wasConnected = IsConnected;
+                bool currentlyConnected = await ValidateIPConnection();
+                
+                if (wasConnected != currentlyConnected)
+                {
+                    IsConnected = currentlyConnected;
+                    ConnectionChanged?.Invoke(currentlyConnected);
+                    
+                    System.Diagnostics.Debug.WriteLine($"Connection status changed: {(currentlyConnected ? "Connected" : "Disconnected")}");
+                    
+                    // If disconnected, optionally navigate to Connection page
+                    if (!currentlyConnected)
+                    {
+                        await HandleConnectionLoss();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Connection monitoring error: {ex.Message}");
+            }
+        }
+        
+        // Handle connection loss
+        private static async Task HandleConnectionLoss()
+        {
+            try
+            {
+                // You can customize this behavior based on your needs
+                System.Diagnostics.Debug.WriteLine("Connection lost - consider showing Connection page");
+                
+                // Optional: Auto-navigate to Connection page on main thread
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    try
+                    {
+                        if (Application.Current?.MainPage != null)
+                        {
+                            // Only navigate if not already on Connection page
+                            if (!(Application.Current.MainPage is NavigationPage navPage && 
+                                  navPage.CurrentPage is Connection))
+                            {
+                                Application.Current.MainPage = new NavigationPage(new Connection());
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Navigation error: {ex.Message}");
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Handle connection loss error: {ex.Message}");
+            }
+        }
+        
+        // Enhanced IP validation method
         public static async Task<bool> ValidateIPConnection()
         {
             try
             {
-                using (var ping = new Ping())
+                // Test API endpoint instead of ping for better reliability
+                using (var httpClient = new HttpClient())
                 {
-                    var reply = await ping.SendPingAsync(IP, 3000); // 3 second timeout
-                    return reply.Status == IPStatus.Success;
+                    httpClient.Timeout = TimeSpan.FromSeconds(5);
+                    
+                    string testUrl = $"{IP}/api/kategori";
+                    System.Diagnostics.Debug.WriteLine($"Testing connection to: {testUrl}");
+                    
+                    var response = await httpClient.GetAsync(testUrl);
+                    bool isConnected = response.IsSuccessStatusCode;
+                    
+                    System.Diagnostics.Debug.WriteLine($"Connection test result: {isConnected} (Status: {response.StatusCode})");
+                    return isConnected;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"Connection validation failed: {ex.Message}");
                 return false;
             }
         }
@@ -85,10 +192,11 @@ namespace Toko2025
                 System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
             }
             
-            // Test API endpoint (tanpa sync)
+            // Start connection monitoring
             Task.Run(async () => 
             {
                 await Task.Delay(2000); // Wait 2 seconds
+                await MonitorConnection();
                 await TestAPIEndpoint();
             });
             
@@ -96,9 +204,6 @@ namespace Toko2025
             if (Login.IsUserLoggedIn())
             {
                 MainPage = new TabPage(); // Langsung ke TabPage
-
-                //MainPage = new NavigationPage(new Connection());
-             
             }
             else
             {
@@ -198,14 +303,43 @@ namespace Toko2025
                 
                 return $"Database Status:\n" +
                        $"Kategori: {kategoriCount} items\n" +
-                       $"Kategori Last Sync: {kategoriLastSync?.ToString("dd/MM/yyyy HH:mm:ss") ?? "Never"}\n" +
                        $"Merk: {merkCount} items\n" +
-                       $"Merk Last Sync: {merkLastSync?.ToString("dd/MM/yyyy HH:mm:ss") ?? "Never"}";
+                       $"Kategori Last Sync: {kategoriLastSync}\n" +
+                       $"Merk Last Sync: {merkLastSync}";
             }
             catch (Exception ex)
             {
                 return $"Database Status Error: {ex.Message}";
             }
+        }
+        
+        // Start periodic connection monitoring
+        public static void StartConnectionMonitoring(int intervalSeconds = 30)
+        {
+            Task.Run(async () =>
+            {
+                while (true)
+                {
+                    try
+                    {
+                        await MonitorConnection();
+                        await Task.Delay(TimeSpan.FromSeconds(intervalSeconds));
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Connection monitoring loop error: {ex.Message}");
+                        await Task.Delay(TimeSpan.FromSeconds(intervalSeconds));
+                    }
+                }
+            });
+        }
+        
+        // Get current connection info
+        public static string GetConnectionInfo()
+        {
+            return $"Current IP: {IP}\n" +
+                   $"Status: {(IsConnected ? "Connected" : "Disconnected")}\n" +
+                   $"Network Type: {Preferences.Get("NetworkType", "Unknown")}";
         }
     }
 }

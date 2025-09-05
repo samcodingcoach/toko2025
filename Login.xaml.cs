@@ -25,6 +25,22 @@ public partial class Login : ContentPage
     {
         try
         {
+            // Check connection before loading profile
+            bool isConnected = await ConnectionService.TestConnection();
+            if (!isConnected)
+            {
+                System.Diagnostics.Debug.WriteLine("No connection available, using fallback values");
+                // Use fallback values when no connection
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    StoreNameLabel.Text = "NAMA TOKO";
+                    StoreAddressLabel.Text = "Alamat Toko";
+                    StoreImageBackground.Source = null;
+                    FallbackGradient.IsVisible = true;
+                });
+                return;
+            }
+
             var storeProfile = await GetStoreProfile();
             if (storeProfile != null && storeProfile.success)
             {
@@ -173,7 +189,12 @@ public partial class Login : ContentPage
     private async void ButtonLogin_Clicked(object sender, EventArgs e)
     {
         // Validasi koneksi sebelum login
-        
+        bool isConnected = await ConnectionService.CheckConnectionAndHandle();
+        if (!isConnected)
+        {
+            // ConnectionService will handle showing Connection page
+            return;
+        }
 
         // Disable button saat loading
         if (sender is Button btn)
