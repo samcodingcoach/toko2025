@@ -95,14 +95,14 @@ namespace Toko2025
             // Check if user is logged in
             if (Login.IsUserLoggedIn())
             {
-               MainPage = new TabPage(); // Langsung ke TabPage
+                MainPage = new TabPage(); // Langsung ke TabPage
 
-              // MainPage = new NavigationPage(new Account.Bluetooth());
+                //MainPage = new NavigationPage(new Connection());
              
             }
             else
             {
-                MainPage = new NavigationPage(new Login());
+                MainPage = new NavigationPage(new Connection());
             }
         }
 
